@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRI Workflows & Scripts | Team Vasquez</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2A4A;--purple:#5C55B0;--purple-lt:#EEEDFE;--purple-md:#AFA9EC;
+  --teal:#0F7A5C;--teal-lt:#E1F5EE;--blue:#1A6FAF;--blue-lt:#E6F1FB;
+  --amber:#9A6010;--amber-lt:#FEF3DC;--coral:#B04422;--coral-lt:#FAECE7;
+  --green:#27500A;--green-lt:#EAF3DE;--gray:#555550;--gray-lt:#F4F3EF;
+  --hector:#5C1A8A;--hector-lt:#F3EAFC;--gold:#C9A84C;
+  --rule:#E0DDD5;--bg:#F5F3EE;--surface:#fff;
+  --text:#1A1917;--text2:#5C5955;--text3:#9A9590;
+  --r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
+
+/* NAV */
+.top-nav{background:var(--navy);display:flex;align-items:center;gap:0;padding:0;overflow-x:auto;}
+.nav-btn{padding:.85rem 1.25rem;font-size:13px;font-weight:500;color:rgba(255,255,255,.6);border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;}
+.nav-btn:hover{color:#fff;}
+.nav-btn.active{color:#fff;border-bottom-color:var(--gold);}
+.nav-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold);padding:.85rem 1.5rem;white-space:nowrap;border-right:1px solid rgba(255,255,255,.1);}
+
+/* SECTIONS */
+.section{display:none;padding:1.75rem 2rem;max-width:900px;margin:0 auto;}
+.section.active{display:block;}
+
+/* HEADERS */
+.sec-eye{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:.4rem;}
+.sec-title{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--navy);margin-bottom:.4rem;}
+.sec-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:1.25rem;max-width:560px;}
+
+/* WORKFLOW TABS */
+.wf-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.25rem;}
+.wf-tab{padding:5px 13px;border-radius:16px;font-size:12px;border:0.5px solid var(--rule);background:transparent;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.wf-tab.active{font-weight:500;color:var(--text);background:var(--gray-lt);border-color:var(--text3);}
+.wf-panel{display:none;}.wf-panel.active{display:block;}
+
+/* OVERVIEW GRID */
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:1rem;}
+.ov-card{border:0.5px solid var(--rule);border-top-width:2.5px;border-radius:var(--r);padding:.85rem;cursor:pointer;transition:all .15s;background:var(--surface);}
+.ov-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.ov-num{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;font-family:'DM Mono',monospace;}
+.ov-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.ov-cnt{font-size:11px;margin-bottom:3px;font-family:'DM Mono',monospace;}
+.ov-goal{font-size:11px;color:var(--text2);line-height:1.4;}
+.rules-box{background:var(--navy);color:rgba(255,255,255,.8);border-radius:var(--r);padding:1rem 1.25rem;font-size:13px;line-height:1.8;}
+.rules-box b{color:#fff;font-weight:600;}
+
+/* WORKFLOW DETAIL */
+.wf-badge{display:inline-flex;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem;font-family:'DM Mono',monospace;}
+.wf-title-lg{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--navy);margin-bottom:.35rem;}
+.wf-goal-box{font-size:12.5px;color:var(--text2);line-height:1.6;padding:.65rem 1rem;background:var(--gray-lt);border-radius:6px;border-left:2px solid var(--rule);margin-bottom:1rem;}
+.ph-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:.9rem 0 .4rem;display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;}
+.ph-label::after{content:'';flex:1;height:0.5px;background:var(--rule);}
+.step-row{display:flex;gap:9px;margin-bottom:6px;}
+.step-n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.step-body{flex:1;border:0.5px solid var(--rule);border-radius:8px;padding:.65rem .9rem;background:var(--surface);}
+.step-t{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.step-d{font-size:12px;color:var(--text2);line-height:1.55;}
+.chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.chip{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:500;}
+.br-sec{margin-top:1rem;}
+.br-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem;font-family:'DM Mono',monospace;}
+.br-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:12px;}
+.br-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.br-cond{color:var(--text2);min-width:155px;}
+.br-dest{color:var(--text);font-weight:500;}
+.expert-box{padding:.75rem 1rem;background:var(--hector-lt);border-radius:8px;font-size:12px;color:#3A1260;line-height:1.6;font-style:italic;margin-top:1rem;border-left:2px solid var(--hector);}
+.expert-box b{font-style:normal;font-weight:600;}
+.wf-btns{display:flex;gap:7px;margin-top:1rem;flex-wrap:wrap;}
+.btn{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:500;border:0.5px solid var(--rule);background:var(--surface);color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.btn:hover{background:var(--gray-lt);}
+.btn.p{background:var(--purple);border-color:var(--purple);color:#fff;}
+.btn.p:hover{background:#4A43A0;}
+
+/* SCRIPT CARDS */
+.script-group{margin-bottom:2rem;}
+.sg-title{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:.35rem;padding-bottom:.35rem;border-bottom:1px solid var(--rule);}
+.sg-sub{font-size:12px;color:var(--text2);margin-bottom:.85rem;line-height:1.5;}
+.sc-card{background:var(--surface);border:0.5px solid var(--rule);border-radius:var(--r);overflow:hidden;margin-bottom:10px;}
+.sc-hdr{background:var(--navy);padding:.5rem 1.1rem;display:flex;justify-content:space-between;align-items:center;}
+.sc-lbl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);font-family:'DM Mono',monospace;}
+.sc-type{font-size:11px;color:rgba(255,255,255,.35);}
+.sc-body{padding:1.1rem;}
+.sc-text{font-size:14px;line-height:1.85;white-space:pre-wrap;color:var(--text);}
+.sc-note{margin-top:.85rem;padding:.7rem .9rem;background:var(--gray-lt);border-radius:6px;font-size:12px;color:var(--text2);line-height:1.6;border-left:2px solid var(--rule);}
+.sc-note b{font-weight:600;color:var(--text3);}
+.sc-actions{padding:.75rem 1.1rem;background:var(--gray-lt);border-top:0.5px solid var(--rule);display:flex;gap:7px;flex-wrap:wrap;}
+.copy-btn{padding:5px 13px;border-radius:7px;font-size:12px;font-weight:500;border:0.5px solid var(--rule);background:var(--surface);color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.copy-btn:hover{background:var(--purple-lt);border-color:var(--purple-md);color:var(--purple);}
+.copy-btn.copied{background:var(--teal-lt);border-color:var(--teal);color:var(--teal);}
+
+/* PRESENTATION */
+.pres-step{background:var(--surface);border:0.5px solid var(--rule);border-radius:var(--r);overflow:hidden;margin-bottom:10px;}
+.pres-hdr{display:flex;align-items:center;gap:12px;padding:.85rem 1.1rem;border-bottom:0.5px solid var(--rule);}
+.pres-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.pres-title{font-size:14px;font-weight:600;color:var(--text);}
+.pres-timing{font-size:11px;color:var(--text3);margin-left:auto;font-family:'DM Mono',monospace;}
+.pres-body{padding:.9rem 1.1rem;}
+.pres-desc{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:.65rem;}
+.pres-script{font-size:13.5px;color:var(--text);line-height:1.85;white-space:pre-wrap;padding:.75rem .9rem;background:var(--gray-lt);border-radius:7px;font-style:italic;border-left:2px solid var(--purple-md);}
+.pres-tips{margin-top:.65rem;}
+.tip-item{display:flex;gap:7px;font-size:12px;color:var(--text2);margin-bottom:4px;line-height:1.5;}
+.tip-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:4px;flex-shrink:0;}
+.pres-close-box{background:var(--navy);color:#fff;border-radius:var(--r);padding:1.1rem 1.25rem;margin-bottom:10px;}
+.pres-close-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:.65rem;}
+.pres-close-script{font-size:13px;line-height:1.85;white-space:pre-wrap;color:rgba(255,255,255,.85);font-style:italic;}
+.elevator-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;}
+@media(max-width:540px){.elevator-grid{grid-template-columns:1fr;}}
+.elev-card{background:var(--surface);border:0.5px solid var(--rule);border-radius:var(--r);padding:1rem 1.1rem;}
+.elev-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.4rem;font-family:'DM Mono',monospace;}
+.elev-text{font-size:13.5px;color:var(--text);line-height:1.7;font-style:italic;}
+
+@media(max-width:600px){.section{padding:1.25rem 1rem;}}
+@media print{.top-nav{display:none;}.section{display:block!important;page-break-before:always;}.section:first-child{page-break-before:avoid;}}
+
+/* SITE NAV */
+.site-nav{background:#1B2A4A;display:flex;align-items:center;flex-wrap:wrap;padding:0;border-bottom:1px solid rgba(255,255,255,.08);}
+.site-nav-brand{font-family:'Playfair Display',serif;font-size:.9rem;color:#C9A84C;padding:.7rem 1.1rem;white-space:nowrap;border-right:1px solid rgba(255,255,255,.1);text-decoration:none;flex-shrink:0;}
+.site-nav-brand:hover{color:#E8C870;}
+.site-nav-links{display:flex;flex-wrap:wrap;}
+.snl{padding:.7rem .95rem;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.snl:hover{color:#fff;}
+.snl.active{color:#fff;border-bottom-color:#C9A84C;}
+
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Site navigation">
+  <a class="site-nav-brand" href="index.html">PRI System</a>
+  <div class="site-nav-links">
+    <a class="snl" href="index.html" id="snl-home">🏠 Home</a>
+    <a class="snl" href="pri_script_library_v2.html" id="snl-scripts">📝 Script Library</a>
+    <a class="snl" href="pri_workflows_and_scripts.html" id="snl-workflows">📋 Workflows</a>
+    <a class="snl" href="pri_financial_calculators.html" id="snl-calculators">🧮 Calculators</a>
+  </div>
+</nav>
+<script>
+(function(){
+  var path=window.location.pathname.split('/').pop()||'index.html';
+  var map={'index.html':'snl-home','pri_script_library_v2.html':'snl-scripts','pri_workflows_and_scripts.html':'snl-workflows','pri_financial_calculators.html':'snl-calculators'};
+  var id=map[path];
+  if(id){var el=document.getElementById(id);if(el)el.classList.add('active');}
+})();
+</script>
+
+<div class="top-nav">
+  <div class="nav-title">PRI System</div>
+  <button class="nav-btn active" onclick="showSec('wf')">📋 7 Workflows</button>
+  <a class="nav-btn" href="pri_script_library_v2.html#nepq" style="text-decoration:none;">💬 NEPQ Scripts →</a>
+  <a class="nav-btn" href="pri_script_library_v2.html#pres" style="text-decoration:none;">🎯 Recruit Presentation →</a>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 1: WORKFLOWS
+══════════════════════════════════════ -->
+<div class="section active" id="sec-wf">
+  <div class="sec-eye">Prospecting system</div>
+  <h1 class="sec-title">7 Workflows</h1>
+  <p class="sec-sub">Follow-up steps included inside each meeting workflow. Every WF ends with a referral ask. Rapport is assumed throughout — it is a mindset, not a separate step.</p>
+
+  <div class="wf-tabs" id="wf-tabs"></div>
+  <div id="wf-panels"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 2: NEPQ FOLLOW-UP SCRIPTS
+══════════════════════════════════════ -->
+<div class="section" id="sec-nepq">
+  <div class="sec-eye">Jeremy Miner · NEPQ methodology</div>
+  <h1 class="sec-title">Follow-Up Scripts</h1>
+  <p class="sec-sub">Based on Miner's Neuro-Emotional Persuasion Questioning (NEPQ) system. Never say "follow up" — it triggers sales resistance. Lead with curiosity, not check-ins.</p>
+
+  <div style="background:var(--hector-lt);border-left:3px solid var(--hector);padding:.85rem 1rem;border-radius:6px;margin-bottom:1.5rem;font-size:13px;color:#3A1260;line-height:1.65;">
+    <b style="display:block;margin-bottom:4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;">NEPQ Core Principle</b>
+    "The single most effective way to sell anything to anyone is to be a <b>problem finder and problem solver</b> — not a product pusher. Get prospects to convince themselves." — Jeremy Miner
+  </div>
+
+  <div class="script-group">
+    <div class="sg-title">Touch 1 — After no response to your intro email (Day 2-3)</div>
+    <div class="sg-sub">Do NOT say "just following up" or "checking in." Create curiosity and reference something real about them.</div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">Text — warm market</span><span class="sc-type">Touch 1</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___! I was thinking about what you mentioned about [their job / situation / goal]. Something came up that reminded me of it — I actually think it would be really relevant to what you're dealing with. Would you be open to a quick 15-minute call this week?</div>
+        <div class="sc-note"><b>NEPQ principle:</b> Reference something specific they said. This shows you were listening, not just mass-texting. The phrase "something came up" creates curiosity without pressure.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___! I was thinking about what you mentioned about [their job / situation / goal]. Something came up that reminded me of it — I actually think it would be really relevant to what you're dealing with. Would you be open to a quick 15-minute call this week?`)">Copy</button>
+      </div>
+    </div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">Text — cold / newer contact</span><span class="sc-type">Touch 1</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___, quick question — when we talked you mentioned [something they said]. Has that situation changed at all for you recently?</div>
+        <div class="sc-note"><b>NEPQ principle:</b> A question about their situation — not your product. This is Miner's "status quo disruption" — you're prompting them to think about whether things have gotten better or worse since you last spoke.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___, quick question — when we talked you mentioned [something they said]. Has that situation changed at all for you recently?`)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-group">
+    <div class="sg-title">Touch 2 — Still no response (1 week later)</div>
+    <div class="sg-sub">Miner calls this the "pattern interrupt." Say something unexpected that breaks the cycle of being ignored.</div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">Text</span><span class="sc-type">Touch 2 · Pattern interrupt</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___, I'm going to be honest with you — most people in your situation tell me one of two things: either they feel like they're behind where they want to be financially, or they feel like they're doing okay but aren't really sure if their money is working as hard as it could.
+
+Which one would you say is more true for you?</div>
+        <div class="sc-note"><b>NEPQ principle:</b> This is a "situation problem question" — it gives them two honest options and invites them to self-identify. No pitch. No pressure. They feel understood, not sold to.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___, I'm going to be honest with you — most people in your situation tell me one of two things: either they feel like they're behind where they want to be financially, or they feel like they're doing okay but aren't really sure if their money is working as hard as it could.\n\nWhich one would you say is more true for you?`)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-group">
+    <div class="sg-title">Touch 3 — They responded "not now" or "maybe later" (2 weeks out)</div>
+    <div class="sg-sub">Miner's approach: never accept vague timing. Ask a future-pacing question that connects their pain to a specific future moment.</div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">Text or call</span><span class="sc-type">Touch 3 · Future pace</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___! No rush at all — I totally get it. Quick question though: when you said "later," what would need to change in your situation for the timing to feel right?</div>
+        <div class="sc-note"><b>NEPQ principle:</b> "What would need to change" is a Miner NEPQ staple. It gets the prospect to articulate their own buying criteria — and often reveals the real objection hiding behind "not now."</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___! No rush at all — I totally get it. Quick question though: when you said 'later,' what would need to change in your situation for the timing to feel right?`)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-group">
+    <div class="sg-title">Touch 4 — They said "not interested" (1 month later)</div>
+    <div class="sg-sub">Miner's re-engage after a hard no. The goal is NOT to resell them — it's to find out if their situation has changed.</div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">Text</span><span class="sc-type">Touch 4 · Re-engage after no</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___! I completely respect where you were when we last talked. I'm not reaching out to push anything — I just wanted to check in because things change, and sometimes what didn't make sense 6 weeks ago makes a lot of sense now.
+
+Has anything shifted for you with [their situation / job / finances] since we last spoke?</div>
+        <div class="sc-note"><b>NEPQ principle:</b> "I'm not reaching out to push anything" is a disarming opener — it lowers their guard immediately. Then the question "has anything shifted" is a low-pressure status-check that invites them to self-qualify without feeling sold to.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___! I completely respect where you were when we last talked. I'm not reaching out to push anything — I just wanted to check in because things change, and sometimes what didn't make sense 6 weeks ago makes a lot of sense now.\n\nHas anything shifted for you with [their situation / job / finances] since we last spoke?`)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-group">
+    <div class="sg-title">Touch 5 — Value share (ongoing, monthly)</div>
+    <div class="sg-sub">No ask. Just value. Miner says most reps only reach out when they want something — be the person who shows up with value first.</div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">Text — compound interest hook</span><span class="sc-type">Touch 5 · Value share</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___! Random but thought of you — did you know that $10k invested at 9% doubles every 8 years? So in 24 years that's $80k without adding a single dollar. Most people don't realize how powerful time in the market is vs. timing the market. Hope you're doing great! 😊</div>
+        <div class="sc-note"><b>NEPQ principle:</b> No ask at the end. The value IS the touchpoint. If they are curious, they will reply. If they don't reply, you've still stayed top of mind without being pushy.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___! Random but thought of you — did you know that $10k invested at 9% doubles every 8 years? So in 24 years that's $80k without adding a single dollar. Most people don't realize how powerful time in the market is vs. timing the market. Hope you're doing great! 😊`)">Copy</button>
+      </div>
+    </div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">Text — story share</span><span class="sc-type">Touch 5 · Value share</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___! Just had a really cool conversation with a client who was in a similar spot as you — [briefly describe: paying too much for coverage / not sure if they were on track / just started investing]. Long story short, they made one small change and it's going to make a huge difference long term. Made me think of you! Hope things are going well. 😊</div>
+        <div class="sc-note"><b>NEPQ principle:</b> Stories sell better than stats. Miner calls this "social proof through narrative." It plants the seed without an ask and lets them draw their own conclusion.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___! Just had a really cool conversation with a client who was in a similar spot as you — [briefly describe: paying too much for coverage / not sure if they were on track / just started investing]. Long story short, they made one small change and it's going to make a huge difference long term. Made me think of you! Hope things are going well. 😊`)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-group">
+    <div class="sg-title">Touch 6 — The "permission to move on" close (90+ days, no engagement)</div>
+    <div class="sg-sub">Miner's reverse psychology close. Telling someone you're going to stop reaching out often triggers a response faster than any follow-up ever did.</div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">Text</span><span class="sc-type">Touch 6 · Permission close</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___! I don't want to keep reaching out if the timing just isn't right — I totally get it, life is busy. I'm going to go ahead and let you reach back out when the time feels better for you. But before I do — is there anything about your financial situation that you're still curious about or that I could help clarify? No pressure either way. 😊</div>
+        <div class="sc-note"><b>NEPQ principle:</b> This is Miner's "takeaway close" — removing yourself creates scarcity and often prompts people to re-engage who otherwise wouldn't. End it with a question, not a statement, so there is still an open door.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___! I don't want to keep reaching out if the timing just isn't right — I totally get it, life is busy. I'm going to go ahead and let you reach back out when the time feels better for you. But before I do — is there anything about your financial situation that you're still curious about or that I could help clarify? No pressure either way. 😊`)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-group">
+    <div class="sg-title">NEPQ Objection Re-openers</div>
+    <div class="sg-sub">When a prospect gave a vague objection last time — use these to reopen the conversation without repeating the same pitch.</div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">They said: "I need to think about it"</span><span class="sc-type">Re-opener</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___! I've been thinking — when you said you wanted to think about it, what part were you most unsure about? Was it more about the timing, or something about whether it was the right fit for your situation?</div>
+        <div class="sc-note"><b>NEPQ principle:</b> Miner says "I need to think about it" always has a specific hesitation underneath it. This question surfaces the real concern without confrontation.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___! I've been thinking — when you said you wanted to think about it, what part were you most unsure about? Was it more about the timing, or something about whether it was the right fit for your situation?`)">Copy</button>
+      </div>
+    </div>
+    <div class="sc-card">
+      <div class="sc-hdr"><span class="sc-lbl">They said: "I can't afford it right now"</span><span class="sc-type">Re-opener</span></div>
+      <div class="sc-body">
+        <div class="sc-text">Hey ___! Totally makes sense — and honestly I've been thinking about what you shared. Can I ask — what would need to be different financially for it to feel doable? Because sometimes there are options that work with what people actually have right now, not what they wish they had.</div>
+        <div class="sc-note"><b>NEPQ principle:</b> Don't defend the price. Ask about their criteria instead. Miner calls this "getting below the surface objection" — affordability is almost never the real issue.</div>
+      </div>
+      <div class="sc-actions">
+        <button class="copy-btn" onclick="cp(this, `Hey ___! Totally makes sense — and honestly I've been thinking about what you shared. Can I ask — what would need to be different financially for it to feel doable? Because sometimes there are options that work with what people actually have right now, not what they wish they had.`)">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 3: RECRUIT PRESENTATION
+══════════════════════════════════════ -->
+<div class="section" id="sec-pres">
+  <div class="sec-eye">Business opportunity meeting</div>
+  <h1 class="sec-title">Recruit Presentation Flow</h1>
+  <p class="sec-sub">Body language, excitement, and tonality will WIN or lose this presentation. Know this cold, then make it yours.</p>
+
+  <div style="background:var(--amber-lt);border-left:3px solid var(--amber);padding:.85rem 1rem;border-radius:6px;margin-bottom:1.5rem;font-size:13px;color:#4A2E00;line-height:1.65;">
+    <b style="display:block;margin-bottom:3px;">Before you start — your mindset:</b>
+    You are not selling a job. You are sharing a life-changing opportunity with someone you believe in. Your energy and conviction are your most important tools. If you don't believe it, they won't either.
+  </div>
+
+  <div class="pres-step">
+    <div class="pres-hdr">
+      <div class="pres-num" style="background:#EEEDFE;color:#3C3489">1</div>
+      <div class="pres-title">Warm up — chit chat & small talk</div>
+      <div class="pres-timing">2-3 min</div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-desc">Before anything else — be human. Ask about their life, their week, their family. This is not wasted time. It is the foundation everything else is built on.</div>
+      <div class="pres-tips">
+        <div class="tip-item"><span class="tip-dot"></span>Make it real — reference something you know about them from CRM notes</div>
+        <div class="tip-item"><span class="tip-dot"></span>Mirror their energy — if they're relaxed, be relaxed. If they're excited, match it</div>
+        <div class="tip-item"><span class="tip-dot"></span>Transition: "Hey, before I dive in — I'd love to hear a little more about what you've got going on..."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pres-step">
+    <div class="pres-hdr">
+      <div class="pres-num" style="background:#E6F1FB;color:#0C447C">2</div>
+      <div class="pres-title">MACHO questions — learn their situation</div>
+      <div class="pres-timing">5-7 min</div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-desc">Ask questions. Listen more than you talk. Their answers will shape your entire presentation — what to emphasize, what to skip, where they are most vulnerable.</div>
+      <div class="pres-script">• What do you do now for a living? How long have you been doing it?
+• Do you love it? What do you like most about it?
+• Are you making the money you want to make — or the money you need to make?
+• When do you see yourself retiring? Have you thought about that number?
+• What's your biggest challenge in your current role?
+• Do you have big goals and dreams? What does your ideal life look like?
+• Will your current job get you there in the time you want?</div>
+      <div class="pres-tips" style="margin-top:.65rem">
+        <div class="tip-item"><span class="tip-dot"></span>Write down their exact words — repeat them back later in the presentation</div>
+        <div class="tip-item"><span class="tip-dot"></span>Add everything to CRM notes right after the meeting</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pres-step">
+    <div class="pres-hdr">
+      <div class="pres-num" style="background:#EAF3DE;color:#27500A">3</div>
+      <div class="pres-title">Your story — make it personal and real</div>
+      <div class="pres-timing">3-5 min</div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-desc">People join people, not companies. Your story is your most powerful recruiting asset — especially the brother-in-law anchor. Make it real, not rehearsed.</div>
+      <div class="pres-script">• Why you left what you were doing
+• What drew you to this (the mission, the flexibility, the income potential)
+• The brother-in-law anchor: "I joined my brother-in-law — he's been with Primerica for 38 years and is one of the top advisors in the company. I knew if anyone could show me the right path, it was him."
+• Where you are now and where you are headed</div>
+      <div class="pres-tips" style="margin-top:.65rem">
+        <div class="tip-item"><span class="tip-dot"></span>Be vulnerable — share what you were afraid of, what you almost didn't do</div>
+        <div class="tip-item"><span class="tip-dot"></span>Connect your story back to something THEY said in the MACHO questions</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pres-step">
+    <div class="pres-hdr">
+      <div class="pres-num" style="background:#FAECE7;color:#4A1B0C">4</div>
+      <div class="pres-title">Who is Primerica — credibility anchor</div>
+      <div class="pres-timing">2-3 min</div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-desc">Keep this short and credibility-focused. They don't need a history lesson — they need to know this is real and legitimate.</div>
+      <div class="pres-script">• Almost 50 years in business — helping millions of middle-income families
+• Publicly traded on the NYSE — this is a real company with real oversight
+• Licensed and regulated by FINRA and state insurance departments
+• Mission: "We help Main Street, not Wall Street"
+• "Buy term and invest the rest" — the philosophy that actually works for families like yours</div>
+    </div>
+  </div>
+
+  <div class="pres-step">
+    <div class="pres-hdr">
+      <div class="pres-num" style="background:#F3EAFC;color:#5C1A8A">5</div>
+      <div class="pres-title">The opportunity — draw out the circles & income</div>
+      <div class="pres-timing">5-8 min</div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-desc">Draw this out on paper or whiteboard — visual impact is everything. Show how income compounds as you build your team.</div>
+      <div class="pres-script">• Start with personal sales income: your commission on every policy and investment
+• Add override income: when your team sells, you earn a % of everything they produce
+• Draw the circles: you → your reps → their reps → growing override income
+• "This is how 38 years of building a team creates real financial independence"
+• Show the Non-captive independent structure: you build YOUR business, not theirs</div>
+      <div class="pres-tips" style="margin-top:.65rem">
+        <div class="tip-item"><span class="tip-dot"></span>Use real numbers from your upline's actual production where possible</div>
+        <div class="tip-item"><span class="tip-dot"></span>Reference the compound interest concept — it applies to teams too, not just money</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pres-step">
+    <div class="pres-hdr">
+      <div class="pres-num" style="background:#E1F5EE;color:#085041">6</div>
+      <div class="pres-title">Connect to their goals — confirm and amplify</div>
+      <div class="pres-timing">3-4 min</div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-desc">This is where you connect what you just showed them to what THEY said earlier. Use their exact words — it shows you were listening and makes it personal.</div>
+      <div class="pres-script">• "You mentioned earlier that [their goal / situation]. Does what I just showed you connect to that at all?"
+• "You said you wanted to [retire in X years / make more / have flexibility]. What I'm showing you is a path that can actually get you there."
+• "How many people do you know who [MACHO match — married, have kids, need more income, don't have investments]? Because those are the people we help."
+• "How many hours a week would you be willing to invest to actually make that happen?"</div>
+    </div>
+  </div>
+
+  <div class="pres-step">
+    <div class="pres-hdr">
+      <div class="pres-num" style="background:#FEF3DC;color:#633806">7</div>
+      <div class="pres-title">Handle objections calmly and directly</div>
+      <div class="pres-timing">As needed</div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-desc">Expect objections. Welcome them — they mean the person is engaging. Use NEPQ-style questions to help them work through their own hesitation.</div>
+      <div class="pres-script">• "Is this MLM?" → "Fair question. We're a licensed financial services company on the NYSE. The model is similar to how a law firm works — you can build a team and earn from their production, but it's always built on selling real products to real clients."
+• "I'm burnt out / introverted" → "Actually that's one of the reasons I think this would work well for you. You get to meet new people constantly, on your terms, with a real mission behind it."
+• "I don't have time" → "How many hours a week would it take to change your financial future? Because most people can find 10-15 hours when the reason is big enough."</div>
+    </div>
+  </div>
+
+  <div class="pres-close-box">
+    <div class="pres-close-title">The Close — two tracks</div>
+    <div class="pres-close-script">OPPORTUNITY CLOSE:
+"If there's a way for you to make a lot more money, serving people in a meaningful way, and create the flexibility you said you wanted — would you be open to taking the next step?"
+
+FNA ANGLE (if they want to start as a client first):
+"If I put together a written financial game plan for you and you like it and use it — would you refer me to everyone you know who could benefit from the same thing?"
+
+SCHEDULE THE NEXT STEP:
+"Here's what I'd love to do — let's schedule a time to [complete your application / do your FNA / meet with my brother-in-law]. Would [day] or [day] work better for you?"</div>
+  </div>
+
+  <div class="pres-step">
+    <div class="pres-hdr">
+      <div class="pres-num" style="background:#E1F5EE;color:#085041">8</div>
+      <div class="pres-title">Follow-up — text, email & stories</div>
+      <div class="pres-timing">Same day + next day</div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-desc">Whether they said yes, maybe, or not yet — follow up the same day. Use the NEPQ follow-up scripts from the previous tab for anyone who needs more time.</div>
+      <div class="pres-script">Same-day text (2-3 messages):
+• "Hey ___, it was so great sharing this with you today! I really enjoyed learning more about [something specific they shared]."
+• "Here's what I'd love to do next: [recap the next step you agreed on]."
+• "In the meantime — does anyone come to mind who might also benefit from seeing what I showed you tonight?"
+
+Same-day email:
+• Subject: "So glad we connected tonight, ___!"
+• Recap the conversation, their goals, the opportunity
+• Bullet the clear next steps
+• Ask for referrals in the P.S.
+
+Next-day text:
+• Confirm they received your email
+• Ask if any questions came up overnight — "Sometimes things hit you after you sleep on it"</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div class="sg-title" style="margin-bottom:.85rem;">Elevator Pitches — choose what feels natural</div>
+    <div class="elevator-grid">
+      <div class="elev-card">
+        <div class="elev-label">Financial literacy angle</div>
+        <div class="elev-text">"I teach people what the banks and insurance companies don't want you to know — and help them save money on taxes, insurance, and build real wealth. Do you know your financial number?"</div>
+      </div>
+      <div class="elev-card">
+        <div class="elev-label">Financial independence angle</div>
+        <div class="elev-text">"I help people create a financial plan to protect them from unexpected challenges and ultimately achieve financial independence — which we all want, right?"</div>
+      </div>
+      <div class="elev-card">
+        <div class="elev-label">Money game angle</div>
+        <div class="elev-text">"I'm in the business of helping people understand and win in the money game — debt, income protection, and retirement. Most people are losing without even knowing it."</div>
+      </div>
+      <div class="elev-card">
+        <div class="elev-label">Full coach angle</div>
+        <div class="elev-text">"I'm a financial coach. I educate and guide people on how to be financially free — get out of debt, protect what they've built, and achieve financial independence. Are you open to learning more?"</div>
+      </div>
+      <div class="elev-card">
+        <div class="elev-label">Primerica mission angle</div>
+        <div class="elev-text">"Most people think we sell life insurance and investments. But what we really sell is a better future. A better way. In Primerica, we found a better life."</div>
+      </div>
+      <div class="elev-card">
+        <div class="elev-label">Simple & powerful</div>
+        <div class="elev-text">"I build retirement strategies so you can stop wondering if you're going to outlive your income."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SECTION NAV ──
+function showSec(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── COPY ──
+function cp(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
+  });
+}
+
+// ── WORKFLOW DATA ──
+const C=[
+  {bg:'#EEEDFE',tx:'#3C3489',dot:'#5C55B0'},
+  {bg:'#E6F1FB',tx:'#0C447C',dot:'#1A6FAF'},
+  {bg:'#E1F5EE',tx:'#085041',dot:'#1D9E75'},
+  {bg:'#FAECE7',tx:'#4A1B0C',dot:'#D85A30'},
+  {bg:'#EAF3DE',tx:'#27500A',dot:'#639922'},
+  {bg:'#F1EFE8',tx:'#444441',dot:'#888780'},
+  {bg:'#FEF3DC',tx:'#633806',dot:'#BA7517'},
+];
+const WFS=[
+  {num:'WF1',title:'New Prospect',cnt:'5 steps',goal:'Add to CRM · intro text & email · confirm receipt · ASK for meeting',
+   expert:'Belfort: Sift fast. Identify strong leads while building rapport simultaneously. Your only goal here is to get the meeting.',
+   phases:[
+    {l:'Within 24 hours',steps:[
+      {n:1,t:'Add to CRM',d:'Name, phone, email, city, bday (bonus), how you met, interest level. Do it before you forget.',cs:['CRM','High priority']},
+      {n:2,t:'Send intro text',d:'Warm, brief, no pitch. "Hey ___, great meeting you!" Confirm you have their right info.',cs:['Text','Same day']},
+      {n:3,t:'Send intro email',d:'"Nice to meet you" — who you are, what you do simply, ask permission to stay in touch.',cs:['Email','Same day']},
+    ]},
+    {l:'Next day',steps:[
+      {n:4,t:'Text to confirm email received',d:'"Did my email come through? Any questions?" Casual and quick.',cs:['Text']},
+      {n:5,t:'ASK for the meeting',d:'Referral angle or 3rd party request. Two options: "Would this week or next weekend work?" Always ask.',cs:['Text or call','Key step']},
+    ]},
+   ],
+   branches:[
+    {c:'Meeting scheduled',d:'→ WF2: 20-Min Referral Meeting',col:'#1A6FAF'},
+    {c:'Not ready / no response',d:'→ WF6: Rapport Building',col:'#888780'},
+    {c:'Recruit interest',d:'→ WF5: Recruit Overview',col:'#639922'},
+   ]},
+  {num:'WF2',title:'20-Min Referral Meeting',cnt:'12 steps',goal:'Confirm · prep · meet · referrals · follow-up · ASK for next meeting',
+   expert:'Tracy: This meeting is about trust and referrals — not selling. Earn the right to go deeper. The sale comes in a later meeting.',
+   phases:[
+    {l:'Before the meeting',steps:[
+      {n:1,t:'Confirm (text + email)',d:'Same day scheduled: email with Zoom link or location. Morning of: reminder text.',cs:['Text','Email']},
+      {n:2,t:'Prep in CRM',d:'Review notes. Know their MACHO. Have compound interest calculator and Rule of 72 ready.',cs:['CRM','Prep']},
+    ]},
+    {l:'Run the meeting',steps:[
+      {n:3,t:'Small talk + confirm time',d:'"Before we jump in — are you still good for about 20 minutes?"',cs:['Step 1']},
+      {n:4,t:'MACHO questions',d:'Ask 2-3 questions. Listen more than you talk. Add notes in CRM right after.',cs:['Rapport','Key']},
+      {n:5,t:'Explain what you do',d:'Simple, outcome-focused. "I help families build retirement strategies so they stop wondering if they\'ll outlive their income."',cs:['Presentation']},
+      {n:6,t:'Show financial concept',d:'Rule of 72 + compound interest. Let the numbers do the talking.',cs:['Key moment']},
+      {n:7,t:'ASK for referrals',d:'"Who do you know who might benefit from a conversation like this?" Every single time.',cs:['Referrals','Always']},
+      {n:8,t:'Offer FNA + email permission',d:'"If you ever want a deeper look, we can do a full FNA." Ask to add to email list.',cs:['Next step']},
+    ]},
+    {l:'Same day — follow-up',steps:[
+      {n:9,t:'Thank you text (2-3 messages)',d:'Warm recap. Reference something specific they shared. Not one long block.',cs:['Text','Within 2 hrs']},
+      {n:10,t:'Follow-up email',d:'"Great connecting" email. Bullet next steps. Referral ask. P.S. — curious about what topics?',cs:['Email']},
+      {n:11,t:'Text to confirm email received',d:'"Did my email come through? Any questions?"',cs:['Text']},
+      {n:12,t:'Referral follow-up email (next day)',d:'"Know someone?" email — teachers, first responders, grads, families, retiring soon.',cs:['Email','Referrals','Next day']},
+    ]},
+   ],
+   branches:[
+    {c:'FNA interest',d:'→ WF3: FNA Meeting',col:'#1D9E75'},
+    {c:'Life insurance ready',d:'→ WF4: Life Insurance Meeting',col:'#D85A30'},
+    {c:'Recruit interest',d:'→ WF5: Recruit Overview',col:'#639922'},
+    {c:'Referred someone',d:'→ WF1: New Prospect (for each referral)',col:'#1A6FAF'},
+    {c:'Not ready yet',d:'→ WF6: Rapport Building',col:'#888780'},
+   ]},
+  {num:'WF3',title:'FNA Meeting',cnt:'11 steps',goal:'Confirm · prep · run FNA · present solution · close or next step · follow-up',
+   expert:'Carnegie: Uncover true needs, wants, and goals. Understand where they are vs. where they want to be. Present the solution in their language.',
+   phases:[
+    {l:'Before the meeting',steps:[
+      {n:1,t:'Confirm (text + email)',d:'Same-day text after scheduling. Email with agenda. Morning-of reminder.',cs:['Text','Email']},
+      {n:2,t:'Prep in CRM',d:'Review all notes from WF2. Know their full situation before you walk in.',cs:['CRM','Prep']},
+    ]},
+    {l:'Run the FNA',steps:[
+      {n:3,t:'Small talk + confirm time',d:'"Still good for about 20-30 minutes?" Warm up before diving in.',cs:['Step 1']},
+      {n:4,t:'Deep MACHO + job questions',d:'More thorough than WF2. Full financial picture. Listen. Add notes in CRM.',cs:['Rapport','Key']},
+      {n:5,t:'Review current situation',d:'What do they have now? What is missing? What are they paying? What are their goals?',cs:['Discovery']},
+      {n:6,t:'Present solution',d:'Based on what you learned — life, investments, debt elimination, or combination.',cs:['Presentation','Key']},
+      {n:7,t:'Handle objections',d:'Use objection library. Stay calm. Re-ask after handling each one.',cs:['Objections']},
+      {n:8,t:'ASK for referrals + email permission',d:'"Who came to mind while we were talking?" Always. Email permission if not given yet.',cs:['Referrals','Always']},
+    ]},
+    {l:'Same day — follow-up',steps:[
+      {n:9,t:'Thank you text (2-3 messages)',d:'Warm, specific, recap. What are the next steps?',cs:['Text','Within 2 hrs']},
+      {n:10,t:'Follow-up email',d:'Recap. Next steps bulleted clearly. Referral ask.',cs:['Email']},
+      {n:11,t:'Text to confirm email received',d:'"Did my email come through? Any questions?"',cs:['Text','Next day']},
+    ]},
+   ],
+   branches:[
+    {c:'Life insurance — ready to apply',d:'→ WF4: Life Insurance Meeting',col:'#D85A30'},
+    {c:'Investments — ready to open',d:'→ Onboarding: Investments',col:'#1A6FAF'},
+    {c:'Signed up — any product',d:'→ Onboarding WF (appropriate track)',col:'#1D9E75'},
+    {c:'Needs more time',d:'→ WF7: Long-Term Follow-Up',col:'#BA7517'},
+    {c:'Referred someone',d:'→ WF1: New Prospect',col:'#1A6FAF'},
+   ]},
+  {num:'WF4',title:'Life Insurance Meeting',cnt:'11 steps',goal:'Pre-qualify (3/5 MACHO) · both spouses · review needs · present · close · onboard or follow-up',
+   expert:'Hopkins: Pre-qualify with 3 of 5 MACHO before booking. Belfort: Both decision-makers must be present — one spouse almost never closes.',
+   phases:[
+    {l:'Before you schedule',steps:[
+      {n:1,t:'Pre-qualify (3 of 5 MACHO)',d:'Married · Age 25-55 · Children · Homeowner · Occupation/income. Need 3 of 5. Do not book without this.',cs:['Pre-qualify','Do this first']},
+    ]},
+    {l:'Before the meeting',steps:[
+      {n:2,t:'Invite both spouses / decision-makers',d:'"Can we get your spouse/partner on the call too? I want to answer both your questions at once." Non-negotiable.',cs:['Critical']},
+      {n:3,t:'Confirm (text + email)',d:'Day before: email. Morning of: reminder text. Include Zoom or address.',cs:['Text','Email']},
+    ]},
+    {l:'Run the meeting',steps:[
+      {n:4,t:'Review current coverage',d:'What do they have? How much? What does it actually cover? What are they paying?',cs:['Discovery']},
+      {n:5,t:'Identify the gap',d:'Show the difference between what they have and what they actually need.',cs:['Key moment']},
+      {n:6,t:'Present term life options',d:'"Buy term and invest the rest." Show the options. Simple and outcome-focused.',cs:['Presentation']},
+      {n:7,t:'Handle objections + close',d:'Use objection library. Re-ask after each handle. ASK for the application.',cs:['Objections','Close','Key']},
+      {n:8,t:'ASK for referrals',d:'"Who came to mind while we were talking?" Whether they sign or not — always ask.',cs:['Referrals','Always']},
+    ]},
+    {l:'Same day — follow-up',steps:[
+      {n:9,t:'Thank you text (2-3 messages)',d:'Warm recap. Next steps clearly stated.',cs:['Text','Within 2 hrs']},
+      {n:10,t:'Follow-up email',d:'Recap. Application status or next step date. Referral ask.',cs:['Email']},
+      {n:11,t:'Text to confirm email received',d:'"Did my email come through? Any questions about the application?"',cs:['Text','Next day']},
+    ]},
+   ],
+   branches:[
+    {c:'Application signed',d:'→ Onboarding: Life Insurance',col:'#1D9E75'},
+    {c:'Needs more time',d:'→ WF7: Long-Term Follow-Up',col:'#BA7517'},
+    {c:'Not qualified',d:'→ WF6: Rapport Building',col:'#888780'},
+    {c:'Referred someone',d:'→ WF1: New Prospect',col:'#1A6FAF'},
+   ]},
+  {num:'WF5',title:'Recruit Overview Meeting',cnt:'10 steps',goal:'Schedule · confirm · run overview · follow-up · application or long-term follow-up',
+   expert:'Tracy: People do not join companies — they join people. Your story and your upline\'s 38 years are your strongest recruiting assets. Lead with them every time.',
+   phases:[
+    {l:'Before the meeting',steps:[
+      {n:1,t:'Schedule using Opportunity script',d:'Phone call recommended. Ask 3-4 MACHO/job questions first. Reflect answers back before closing the invite.',cs:['Call','Key']},
+      {n:2,t:'Confirm (text + email)',d:'Same-day text. Email with brief overview of what to expect. Morning-of reminder.',cs:['Text','Email']},
+    ]},
+    {l:'Run the overview',steps:[
+      {n:3,t:'Your story + upline anchor',d:'"I joined my brother-in-law — 38 years of experience, one of the top advisors in the company."',cs:['Opening','Key']},
+      {n:4,t:'Who is Primerica',d:'Almost 50 years. NYSE listed. Regulated. Mission-driven. Keep it short and credible.',cs:['Credibility']},
+      {n:5,t:'The business opportunity',d:'Draw out the circles. Personal sales income + override income. Non-captive independent structure.',cs:['Opportunity','Draw it out']},
+      {n:6,t:'Connect to their goals',d:'Use their exact words from MACHO questions. "You mentioned... does this connect to that?"',cs:['Personal','Key']},
+      {n:7,t:'Handle objections + close',d:'"Is this MLM?" — have this cold. Answer directly. Close with two options for next step.',cs:['Objections','Close']},
+      {n:8,t:'ASK for referrals',d:'"Whether or not this is right for you — do you know anyone who might be a great fit?"',cs:['Referrals','Always']},
+    ]},
+    {l:'Same day — follow-up',steps:[
+      {n:9,t:'Thank you text (2-3 messages)',d:'Warm recap. "What questions came up after thinking about it?"',cs:['Text','Within 2 hrs']},
+      {n:10,t:'Follow-up email + confirm text',d:'Recap the opportunity. Link overview. Referral ask. Next day: confirm email received.',cs:['Email','Text']},
+    ]},
+   ],
+   branches:[
+    {c:'Joins the team',d:'→ Onboarding: New Recruit',col:'#1D9E75'},
+    {c:'Interested but not ready',d:'→ WF7: Long-Term Follow-Up',col:'#BA7517'},
+    {c:'Not interested',d:'→ WF6: Rapport Building',col:'#888780'},
+    {c:'Referred someone',d:'→ WF1: New Prospect',col:'#1A6FAF'},
+   ]},
+  {num:'WF6',title:'Rapport Building',cnt:'6 steps',goal:'No response · not ready · not interested yet · stay top of mind · 0-90 day nurture',
+   expert:'Carnegie: Be interested, not interesting. Cardone: 73% of prospects are not sales-ready. 80% of sales happen on the 5th-12th contact. Be the one who stays.',
+   phases:[
+    {l:'Immediately',steps:[
+      {n:1,t:'Note reason in CRM',d:'No response? Not ready? Not interested? Not qualified? The reason determines your next move.',cs:['CRM','First step']},
+    ]},
+    {l:'Weeks 1-4',steps:[
+      {n:2,t:'Value touchpoint (no pitch)',d:'Share something useful — tip, article, stat, story. "Thought of you." No ask attached.',cs:['Text or email','Week 1']},
+      {n:3,t:'MACHO / life questions (NEPQ style)',d:'Ask a curious question about their situation. Not a check-in — a genuine question.',cs:['Week 2']},
+      {n:4,t:'Ask email permission',d:'"Would it be okay if I sent you occasional financial tips?" Get YES first — always.',cs:['Ask first','Key']},
+      {n:5,t:'Add to CRM email campaign',d:'After permission only. Automation keeps them warm while you focus on active prospects.',cs:['CRM','Email']},
+    ]},
+    {l:'Ongoing',steps:[
+      {n:6,t:'Monthly personal touchpoint',d:'Not automated. Something real — a story, a win, a NEPQ question about their life.',cs:['Personal','Monthly']},
+    ]},
+   ],
+   branches:[
+    {c:'Shows interest / warms up',d:'→ WF1: ASK for meeting',col:'#1A6FAF'},
+    {c:'Refers someone',d:'→ WF1: New Prospect (for referral)',col:'#1D9E75'},
+    {c:'Still cold after 90 days',d:'→ WF7: Long-Term Follow-Up',col:'#BA7517'},
+   ]},
+  {num:'WF7',title:'Long-Term Follow-Up',cnt:'6 steps',goal:'Rapport · CRM campaigns · quarterly check-ins · referrals · life event triggers · annual review',
+   expert:'Cardone: Follow up until they buy or die. 63% do not purchase for 3 months. Miner: Never say "follow up" — ask a question about their situation instead.',
+   phases:[
+    {l:'Quarterly',steps:[
+      {n:1,t:'Personal check-in (NEPQ style)',d:'Not "just checking in." Ask: "Has anything changed with [their situation] since we last spoke?"',cs:['Personal','Quarterly']},
+      {n:2,t:'Share a story or stat',d:'"A client just did X — here is what happened." Short and relevant to their situation.',cs:['Text or email']},
+    ]},
+    {l:'Ongoing — passive',steps:[
+      {n:3,t:'CRM email campaign',d:'Educational, value-first. Not pitchy. Appropriate campaign for their interest level.',cs:['CRM','Email']},
+      {n:4,t:'Watch for life event triggers',d:'New job, baby, home, retirement approaching — add to CRM notes. These are your re-engage moments.',cs:['CRM','Watch']},
+    ]},
+    {l:'Every 2-3 months',steps:[
+      {n:5,t:'Referral reminder',d:'"Who have you come across lately who might benefit from a conversation like this?" Low pressure.',cs:['Referrals','Always']},
+    ]},
+    {l:'Annually',steps:[
+      {n:6,t:'Annual review invitation',d:'"I\'d love to do a free financial review — just to see if anything has changed." Even non-clients.',cs:['Re-engage']},
+    ]},
+   ],
+   branches:[
+    {c:'Re-engages / shows interest',d:'→ WF1: ASK for meeting',col:'#1A6FAF'},
+    {c:'Life event trigger',d:'→ WF2 or WF4 depending on situation',col:'#1D9E75'},
+    {c:'Refers someone',d:'→ WF1: New Prospect (for referral)',col:'#1D9E75'},
+    {c:'Becomes a client',d:'→ Onboarding WF (appropriate track)',col:'#639922'},
+   ]},
+];
+
+// ── RENDER WORKFLOWS ──
+let curWF=7;
+function goWF(i){curWF=i;renderWF();}
+function renderWF(){
+  const tabs=document.getElementById('wf-tabs');
+  tabs.innerHTML=`<button class="wf-tab${curWF===7?' active':''}" onclick="goWF(7)">Overview</button>`+
+    WFS.map((w,i)=>`<button class="wf-tab${curWF===i?' active':''}" onclick="goWF(${i})">${w.num}</button>`).join('');
+  const panels=document.getElementById('wf-panels');
+  if(curWF===7){
+    panels.innerHTML=`
+      <div class="ov-grid">${WFS.map((w,i)=>`<div class="ov-card" onclick="goWF(${i})" style="border-top-color:${C[i].dot}">
+        <div class="ov-num" style="color:${C[i].dot}">${w.num}</div>
+        <div class="ov-title">${w.title}</div>
+        <div class="ov-cnt" style="color:${C[i].dot}">${w.cnt}</div>
+        <div class="ov-goal">${w.goal}</div>
+      </div>`).join('')}</div>
+      <div class="rules-box">
+        <b>5 rules built into every workflow:</b><br>
+        1. Every email is paired with a text to confirm receipt.<br>
+        2. Every meeting ends with a referral ask — no exceptions.<br>
+        3. Rapport is a mindset assumed from day 1 — not a separate step.<br>
+        4. A prospect can enter at any WF depending on their situation.<br>
+        5. Every branch goes to Onboarding (success) or WF6/WF7 (nurture). Nobody falls through.
+      </div>`;
+    return;
+  }
+  const w=WFS[curWF];const c=C[curWF];
+  panels.innerHTML=`
+    <div class="wf-badge" style="background:${c.bg};color:${c.tx}">${w.num} · ${w.cnt}</div>
+    <div class="wf-title-lg">${w.title}</div>
+    <div class="wf-goal-box">${w.goal}</div>
+    ${w.phases.map(ph=>`
+      <div class="ph-label">${ph.l}</div>
+      ${ph.steps.map(s=>`<div class="step-row">
+        <div class="step-n" style="background:${c.bg};color:${c.tx}">${s.n}</div>
+        <div class="step-body">
+          <div class="step-t">${s.t}</div>
+          <div class="step-d">${s.d}</div>
+          <div class="chips">${(s.cs||[]).map(ch=>`<span class="chip" style="background:${c.bg};color:${c.tx}">${ch}</span>`).join('')}</div>
+        </div>
+      </div>`).join('')}
+    `).join('')}
+    <div class="br-sec">
+      <div class="br-title">Where this leads</div>
+      ${w.branches.map(b=>`<div class="br-row">
+        <div class="br-dot" style="background:${b.col}"></div>
+        <div class="br-cond">${b.c}</div>
+        <div style="color:#9A9590">→</div>
+        <div class="br-dest">${b.d}</div>
+      </div>`).join('')}
+    </div>
+    <div class="expert-box"><b>Expert principle:</b> ${w.expert}</div>
+    <div class="wf-btns">
+      ${curWF>0?`<button class="btn" onclick="goWF(${curWF-1})">← Previous</button>`:''}
+      ${curWF<WFS.length-1?`<button class="btn p" onclick="goWF(${curWF+1})">Next →</button>`:''}
+    </div>`;
+}
+renderWF();
+</script>
+</body>
+</html>
