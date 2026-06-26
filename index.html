@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRI Training System | Team Vasquez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2A4A;--navy-deep:#111C30;--purple:#5C55B0;--purple-lt:#EEEDFE;--purple-md:#AFA9EC;
+  --teal:#0F7A5C;--teal-lt:#E1F5EE;--blue:#1A6FAF;--blue-lt:#E6F1FB;
+  --amber:#9A6010;--amber-lt:#FEF3DC;--coral:#B04422;--coral-lt:#FAECE7;
+  --green:#27500A;--green-lt:#EAF3DE;--teal2:#085041;--teal2-lt:#D0EEE6;
+  --pink:#72243E;--pink-lt:#FBEAF0;--hector:#5C1A8A;--hector-lt:#F3EAFC;
+  --gold:#C9A84C;--rule:#E0DDD5;--bg:#F5F3EE;--surface:#fff;
+  --text:#1A1917;--text2:#5C5955;--text3:#9A9590;--r:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* HERO */
+.hero{background:var(--navy-deep);position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 60% 80% at 80% 20%,rgba(92,85,176,.25) 0%,transparent 60%),
+  radial-gradient(ellipse 40% 60% at 10% 80%,rgba(15,122,92,.15) 0%,transparent 50%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;}
+.hero-inner{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:2.75rem 2rem 2.25rem;display:flex;align-items:center;gap:2rem;}
+.hero-avatar-wrap{flex-shrink:0;position:relative;}
+.hero-avatar{width:70px;height:70px;border-radius:50%;border:2.5px solid rgba(255,255,255,.2);object-fit:cover;display:block;}
+.hero-avatar-ring{position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(201,168,76,.4);}
+.hero-text{flex:1;}
+.hero-eye{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,4vw,2.4rem);color:#fff;line-height:1.12;margin-bottom:.45rem;}
+.hero-title span{color:var(--gold);}
+.hero-sub{font-size:13.5px;color:rgba(255,255,255,.5);line-height:1.6;max-width:460px;}
+.hero-cta{margin-top:1.25rem;display:flex;gap:9px;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:var(--purple);color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:all .15s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-primary:hover{background:#4A43A0;transform:translateY(-1px);}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:transparent;color:rgba(255,255,255,.7);border-radius:8px;font-size:13px;font-weight:500;text-decoration:none;border:1px solid rgba(255,255,255,.15);transition:all .15s;}
+.btn-ghost:hover{border-color:rgba(255,255,255,.35);color:#fff;}
+
+/* QUOTE */
+.quote-strip{background:var(--hector);padding:.85rem 2rem;display:flex;align-items:center;gap:1rem;overflow:hidden;}
+.quote-name{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0;}
+.quote-text{font-family:'Playfair Display',serif;font-size:13px;font-style:italic;color:rgba(255,255,255,.85);line-height:1.4;}
+
+/* MAIN */
+.main{max-width:960px;margin:0 auto;padding:2.25rem 2rem 4rem;}
+.sec-hdr{display:flex;align-items:baseline;gap:12px;margin-bottom:1.25rem;}
+.sec-title{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--navy);}
+.sec-line{flex:1;height:1px;background:linear-gradient(90deg,var(--rule),transparent);}
+.sec-sub{font-size:11.5px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.06em;}
+
+/* FLOWCHART */
+.fc-wrap{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:1.5rem;margin-bottom:2.25rem;overflow-x:auto;box-shadow:0 2px 12px rgba(27,42,74,.05);}
+.fc-home{display:flex;justify-content:center;margin-bottom:1.25rem;}
+.fc-home-box{background:var(--navy);color:#fff;padding:.65rem 1.75rem;border-radius:10px;text-align:center;}
+.fc-home-title{font-family:'Playfair Display',serif;font-size:1rem;color:#fff;margin-bottom:2px;}
+.fc-home-sub{font-size:10.5px;color:rgba(255,255,255,.5);}
+.fc-buckets{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-bottom:.75rem;}
+@media(max-width:700px){.fc-buckets{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:420px){.fc-buckets{grid-template-columns:repeat(2,1fr);}}
+.fc-bucket{border-radius:8px;padding:.6rem .45rem;text-align:center;border:1px solid transparent;}
+.fc-bucket-icon{font-size:16px;margin-bottom:3px;display:block;}
+.fc-bucket-num{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px;opacity:.7;}
+.fc-bucket-name{font-size:10.5px;font-weight:600;line-height:1.3;}
+.b0{background:var(--teal-lt);border-color:#A8DCC9;}.b0 .fc-bucket-num,.b0 .fc-bucket-name{color:var(--teal);}
+.b1{background:var(--blue-lt);border-color:#A8CBE8;}.b1 .fc-bucket-num,.b1 .fc-bucket-name{color:var(--blue);}
+.b2{background:var(--amber-lt);border-color:#DDB870;}.b2 .fc-bucket-num,.b2 .fc-bucket-name{color:var(--amber);}
+.b3{background:var(--coral-lt);border-color:#DDA090;}.b3 .fc-bucket-num,.b3 .fc-bucket-name{color:var(--coral);}
+.b4{background:var(--green-lt);border-color:#A0C880;}.b4 .fc-bucket-num,.b4 .fc-bucket-name{color:var(--green);}
+.b5{background:var(--teal2-lt);border-color:#88CCBC;}.b5 .fc-bucket-num,.b5 .fc-bucket-name{color:var(--teal2);}
+.b6{background:var(--pink-lt);border-color:#D8A0B4;}.b6 .fc-bucket-num,.b6 .fc-bucket-name{color:var(--pink);}
+.fc-children{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;}
+@media(max-width:700px){.fc-children{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:420px){.fc-children{grid-template-columns:repeat(2,1fr);}}
+.fc-col{display:flex;flex-direction:column;gap:4px;}
+.fc-child{background:var(--bg);border:1px solid var(--rule);border-radius:5px;padding:.35rem .45rem;font-size:9.5px;color:var(--text2);line-height:1.3;text-align:center;}
+
+/* QUICK LAUNCH */
+.ql-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:13px;margin-bottom:2.25rem;}
+.ql-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:1.1rem 1.15rem;text-decoration:none;display:flex;align-items:flex-start;gap:13px;transition:transform .15s,box-shadow .15s,border-color .15s;box-shadow:0 1px 4px rgba(27,42,74,.04);position:relative;overflow:hidden;}
+.ql-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(27,42,74,.09);}
+.ql-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0;}
+.ql-card.purple::before{background:var(--purple);}.ql-card.purple:hover{border-color:var(--purple-md);}
+.ql-card.amber::before{background:var(--amber);}.ql-card.amber:hover{border-color:#DDB870;}
+.ql-card.teal::before{background:var(--teal);}.ql-card.teal:hover{border-color:#7CCAB0;}
+.ql-card.blue::before{background:var(--blue);}.ql-card.blue:hover{border-color:#7AB0E0;}
+.ql-card.coral::before{background:var(--coral);}.ql-card.coral:hover{border-color:#DDA090;}
+.ql-card.green::before{background:var(--green);}.ql-card.green:hover{border-color:#A0C880;}
+.ql-card.navy::before{background:var(--navy);}.ql-card.navy:hover{border-color:#8899BB;}
+.ql-card.coming::before{background:var(--rule);}
+.ql-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.ql-card.purple .ql-icon{background:var(--purple-lt);}
+.ql-card.amber .ql-icon{background:var(--amber-lt);}
+.ql-card.teal .ql-icon{background:var(--teal-lt);}
+.ql-card.blue .ql-icon{background:var(--blue-lt);}
+.ql-card.coral .ql-icon{background:var(--coral-lt);}
+.ql-card.green .ql-icon{background:var(--green-lt);}
+.ql-card.navy .ql-icon{background:var(--blue-lt);}
+.ql-card.coming .ql-icon{background:var(--bg);}
+.ql-body{flex:1;}
+.ql-label{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;font-family:'DM Mono',monospace;}
+.ql-title{font-size:14.5px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.25;}
+.ql-desc{font-size:11.5px;color:var(--text2);line-height:1.5;}
+.ql-card.coming{opacity:.55;cursor:default;}
+.ql-card.coming .ql-title{color:var(--text3);}
+.coming-badge{position:absolute;top:9px;right:9px;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--bg);color:var(--text3);padding:2px 7px;border-radius:8px;border:1px solid var(--rule);}
+
+/* SECTION DIVIDER */
+.sec-divider{display:flex;align-items:center;gap:12px;margin:2rem 0 1.25rem;}
+.sd-label{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);white-space:nowrap;}
+.sd-line{flex:1;height:1px;background:var(--rule);}
+
+/* PHILOSOPHY */
+.phil-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:2.25rem;}
+@media(max-width:560px){.phil-row{grid-template-columns:1fr;}}
+.phil-card{border-radius:var(--r);padding:1rem 1.15rem;border:1px solid transparent;}
+.phil-card.hector{background:var(--hector-lt);border-color:#C49AEC;}
+.phil-card.keith{background:var(--teal2-lt);border-color:#88CCBC;}
+.phil-name{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.phil-card.hector .phil-name{color:var(--hector);}
+.phil-card.keith .phil-name{color:var(--teal2);}
+.phil-q{font-family:'Playfair Display',serif;font-size:13px;font-style:italic;line-height:1.55;}
+.phil-card.hector .phil-q{color:#3A1260;}
+.phil-card.keith .phil-q{color:#052E25;}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--rule);padding:1.25rem 2rem;max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.footer-left{font-size:12px;color:var(--text3);}
+.footer-left strong{color:var(--text2);font-weight:600;}
+.footer-right{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:600px){.hero-inner{flex-direction:column;align-items:flex-start;gap:1rem;padding:1.75rem 1.25rem 1.5rem;}.main{padding:1.5rem 1.25rem 3rem;}}
+
+/* SITE NAV */
+.site-nav{background:#1B2A4A;display:flex;align-items:center;flex-wrap:wrap;padding:0;border-bottom:1px solid rgba(255,255,255,.08);}
+.site-nav-brand{font-family:'Playfair Display',serif;font-size:.9rem;color:#C9A84C;padding:.7rem 1.1rem;white-space:nowrap;border-right:1px solid rgba(255,255,255,.1);text-decoration:none;flex-shrink:0;}
+.site-nav-brand:hover{color:#E8C870;}
+.site-nav-links{display:flex;flex-wrap:wrap;}
+.snl{padding:.7rem .95rem;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.snl:hover{color:#fff;}
+.snl.active{color:#fff;border-bottom-color:#C9A84C;}
+
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Site navigation">
+  <a class="site-nav-brand" href="index.html">PRI System</a>
+  <div class="site-nav-links">
+    <a class="snl" href="index.html" id="snl-home">🏠 Home</a>
+    <a class="snl" href="pri_script_library_v2.html" id="snl-scripts">📝 Script Library</a>
+    <a class="snl" href="pri_workflows_and_scripts.html" id="snl-workflows">📋 Workflows</a>
+    <a class="snl" href="pri_financial_calculators.html" id="snl-calculators">🧮 Calculators</a>
+  </div>
+</nav>
+<script>
+(function(){
+  var path=window.location.pathname.split('/').pop()||'index.html';
+  var map={'index.html':'snl-home','pri_script_library_v2.html':'snl-scripts','pri_workflows_and_scripts.html':'snl-workflows','pri_financial_calculators.html':'snl-calculators'};
+  var id=map[path];
+  if(id){var el=document.getElementById(id);if(el)el.classList.add('active');}
+})();
+</script>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-avatar-wrap">
+      <img class="hero-avatar" src="https://compound-int-calc.netlify.app/amy1.png" alt="Amy Vasquez" onerror="this.style.display='none'">
+      <div class="hero-avatar-ring"></div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-eye">Amy Vasquez · Team Vasquez · San Clemente, CA</div>
+      <h1 class="hero-title">PRI <span>Training</span> System</h1>
+      <p class="hero-sub">Your complete Primerica business playbook — scripts, workflows, calculators, and training all in one place.</p>
+      <div class="hero-cta">
+        <a class="btn-primary" href="pri_script_library_v2.html">📝 Script Library</a>
+        <a class="btn-primary" href="pri_workflows_and_scripts.html" style="background:var(--teal);">📋 Workflows</a>
+        <a class="btn-ghost" href="pri_financial_calculators.html">🧮 Calculators</a>
+        <a class="btn-ghost" href="#launch">View all tools ↓</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-strip">
+  <div class="quote-name">Hector LaMarque</div>
+  <div class="quote-text">"To keep people long term, teach them to become professional salespeople so they consistently make money."</div>
+</div>
+
+<main class="main">
+
+  <!-- FLOWCHART -->
+  <div id="buckets" class="reveal">
+    <div class="sec-hdr">
+      <h2 class="sec-title">The 7-Bucket Map</h2>
+      <div class="sec-line"></div>
+      <div class="sec-sub">Your complete knowledge system</div>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-home">
+        <div class="fc-home-box">
+          <div class="fc-home-title">PRI Training System — Home</div>
+          <div class="fc-home-sub">Goal · process · links to all 7 sections</div>
+        </div>
+      </div>
+      <!-- Connector -->
+      <div style="display:flex;justify-content:center;margin-bottom:.5rem;">
+        <svg width="100%" height="24" viewBox="0 0 700 24" preserveAspectRatio="none" style="max-width:700px;">
+          <line x1="350" y1="0" x2="50"  y2="24" stroke="#C9C7C0" stroke-width="0.8"/>
+          <line x1="350" y1="0" x2="150" y2="24" stroke="#C9C7C0" stroke-width="0.8"/>
+          <line x1="350" y1="0" x2="250" y2="24" stroke="#C9C7C0" stroke-width="0.8"/>
+          <line x1="350" y1="0" x2="350" y2="24" stroke="#C9C7C0" stroke-width="0.8"/>
+          <line x1="350" y1="0" x2="450" y2="24" stroke="#C9C7C0" stroke-width="0.8"/>
+          <line x1="350" y1="0" x2="550" y2="24" stroke="#C9C7C0" stroke-width="0.8"/>
+          <line x1="350" y1="0" x2="650" y2="24" stroke="#C9C7C0" stroke-width="0.8"/>
+          <polygon points="50,24 47,17 53,17"  fill="#C9C7C0"/>
+          <polygon points="150,24 147,17 153,17" fill="#C9C7C0"/>
+          <polygon points="250,24 247,17 253,17" fill="#C9C7C0"/>
+          <polygon points="350,24 347,17 353,17" fill="#C9C7C0"/>
+          <polygon points="450,24 447,17 453,17" fill="#C9C7C0"/>
+          <polygon points="550,24 547,17 553,17" fill="#C9C7C0"/>
+          <polygon points="650,24 647,17 653,17" fill="#C9C7C0"/>
+        </svg>
+      </div>
+      <div class="fc-buckets">
+        <div class="fc-bucket b0"><span class="fc-bucket-icon">💼</span><div class="fc-bucket-num">1</div><div class="fc-bucket-name">Business Basics</div></div>
+        <div class="fc-bucket b1"><span class="fc-bucket-icon">🤝</span><div class="fc-bucket-num">2</div><div class="fc-bucket-name">What To Say</div></div>
+        <div class="fc-bucket b2"><span class="fc-bucket-icon">🛡️</span><div class="fc-bucket-num">3</div><div class="fc-bucket-name">Licensing</div></div>
+        <div class="fc-bucket b3"><span class="fc-bucket-icon">📋</span><div class="fc-bucket-num">4</div><div class="fc-bucket-name">All Products</div></div>
+        <div class="fc-bucket b4"><span class="fc-bucket-icon">👥</span><div class="fc-bucket-num">5</div><div class="fc-bucket-name">Building Your Team</div></div>
+        <div class="fc-bucket b5"><span class="fc-bucket-icon">📈</span><div class="fc-bucket-num">6</div><div class="fc-bucket-name">Growing Your Business</div></div>
+        <div class="fc-bucket b6"><span class="fc-bucket-icon">🌱</span><div class="fc-bucket-num">7</div><div class="fc-bucket-name">Personal Development</div></div>
+      </div>
+      <div class="fc-children">
+        <div class="fc-col">
+          <div class="fc-child">How To Earn · DMO/IPAs</div>
+          <div class="fc-child">Sales Skills & Brochures</div>
+          <a class="fc-child" href="pri_financial_calculators.html" style="text-decoration:none;color:inherit;border:1px solid #DDB870;background:var(--amber-lt);">🧮 Tools: Calc · Rule 72 · CRM</a>
+        </div>
+        <div class="fc-col">
+          <a class="fc-child" href="pri_script_library_v2.html" style="text-decoration:none;color:inherit;border:1px solid #A8CBE8;background:var(--blue-lt);">📝 Script Library (hub)</a>
+          <a class="fc-child" href="pri_script_library_v2.html" style="text-decoration:none;color:inherit;border:1px solid #A8CBE8;background:var(--blue-lt);">Lead-in · Invite · Kitchen Table</a>
+          <a class="fc-child" href="pri_script_library_v2.html" style="text-decoration:none;color:inherit;border:1px solid #A8CBE8;background:var(--blue-lt);">20-Min · Playbooks</a>
+          <a class="fc-child" href="pri_script_library_v2.html" style="text-decoration:none;color:inherit;border:1px solid #A8CBE8;background:var(--blue-lt);">Follow-Up · Objections</a>
+        </div>
+        <div class="fc-col">
+          <div class="fc-child">Life Insurance (all reps)</div>
+          <div class="fc-child">SIE · 6 · 63 · 65 · 26</div>
+          <div class="fc-child">Mortgage Loans</div>
+        </div>
+        <div class="fc-col">
+          <div class="fc-child">Term Life · Debt Elim.</div>
+          <div class="fc-child">Investments · IRA · Roth</div>
+          <div class="fc-child">Mortgage Loans</div>
+          <div class="fc-child">Auto/Home · Legal · ID Theft</div>
+          <div class="fc-child">Home Security — no license</div>
+        </div>
+        <div class="fc-col">
+          <div class="fc-child">Recruiting · Overview</div>
+          <div class="fc-child">Onboarding · 4-week</div>
+          <div class="fc-child">Leadership & Culture</div>
+        </div>
+        <div class="fc-col">
+          <div class="fc-child">Referrals · Ask · Track</div>
+          <div class="fc-child">Add Products to Clients</div>
+          <div class="fc-child">Client Retention</div>
+        </div>
+        <div class="fc-col">
+          <div class="fc-child">Mindset & Habits</div>
+          <div class="fc-child">Goals & Tracking</div>
+          <div class="fc-child">Building to Expand</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK LAUNCH -->
+  <div id="launch" class="reveal">
+    <div class="sec-hdr">
+      <h2 class="sec-title">Quick Launch</h2>
+      <div class="sec-line"></div>
+      <div class="sec-sub">All tools — one place</div>
+    </div>
+
+    <div class="sec-divider"><div class="sd-line"></div><div class="sd-label">Scripts & Presentations</div><div class="sd-line"></div></div>
+    <div class="ql-grid">
+      <a class="ql-card purple" href="pri_script_library_v2.html">
+        <div class="ql-icon">📝</div>
+        <div class="ql-body">
+          <div class="ql-label">Bucket 2 · What To Say</div>
+          <div class="ql-title">Script Library</div>
+          <div class="ql-desc">7 lead-in variations · 20-min meeting · close scripts · follow-up emails · 15 objections in 3 tones</div>
+        </div>
+      </a>
+      <a class="ql-card teal" href="pri_workflows_and_scripts.html">
+        <div class="ql-icon">📋</div>
+        <div class="ql-body">
+          <div class="ql-label">CRM · Workflows</div>
+          <div class="ql-title">7 Workflows + NEPQ Scripts</div>
+          <div class="ql-desc">All 7 prospecting workflows · Jeremy Miner NEPQ follow-up scripts · recruit presentation flow</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sec-divider"><div class="sd-line"></div><div class="sd-label">Financial Calculators</div><div class="sd-line"></div></div>
+    <div class="ql-grid">
+      <a class="ql-card amber" href="pri_financial_calculators.html">
+        <div class="ql-icon">🧮</div>
+        <div class="ql-body">
+          <div class="ql-label">Bucket 1 · Tools</div>
+          <div class="ql-title">Financial Calculator Suite</div>
+          <div class="ql-desc">Time value · cost of waiting · FIN number · debt stacking · compound interest — all 5 in one place</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sec-divider"><div class="sd-line"></div><div class="sd-label">Coming soon</div><div class="sd-line"></div></div>
+    <div class="ql-grid">
+      <div class="ql-card coming">
+        <span class="coming-badge">Coming soon</span>
+        <div class="ql-icon">💼</div>
+        <div class="ql-body">
+          <div class="ql-label">Bucket 1 · Business Basics</div>
+          <div class="ql-title">Business Basics Guide</div>
+          <div class="ql-desc">DMO/IPAs · compensation · warm market · daily activity tracker</div>
+        </div>
+      </div>
+      <div class="ql-card coming">
+        <span class="coming-badge">Coming soon</span>
+        <div class="ql-icon">🛡️</div>
+        <div class="ql-body">
+          <div class="ql-label">Bucket 3 · Licensing</div>
+          <div class="ql-title">License Tracker</div>
+          <div class="ql-desc">Life · SIE · Series 6 · 63 · 65 · 26 · study plans · exam dates</div>
+        </div>
+      </div>
+      <div class="ql-card coming">
+        <span class="coming-badge">Coming soon</span>
+        <div class="ql-icon">📋</div>
+        <div class="ql-body">
+          <div class="ql-label">Bucket 4 · Products</div>
+          <div class="ql-title">Product Playbook</div>
+          <div class="ql-desc">Term life · investments · mortgage · referral products · 30-sec explanations</div>
+        </div>
+      </div>
+      <div class="ql-card coming">
+        <span class="coming-badge">Coming soon</span>
+        <div class="ql-icon">👥</div>
+        <div class="ql-body">
+          <div class="ql-label">Bucket 5 · Building Your Team</div>
+          <div class="ql-title">Team Onboarding</div>
+          <div class="ql-desc">4-week fast start · commitment levels · leadership & culture guide</div>
+        </div>
+      </div>
+      <div class="ql-card coming">
+        <span class="coming-badge">Coming soon</span>
+        <div class="ql-icon">📈</div>
+        <div class="ql-body">
+          <div class="ql-label">Bucket 6 · Growing Your Business</div>
+          <div class="ql-title">Referral System</div>
+          <div class="ql-desc">Ask · track · cross-sell · client retention · adding products</div>
+        </div>
+      </div>
+      <div class="ql-card coming">
+        <span class="coming-badge">Coming soon</span>
+        <div class="ql-icon">🌱</div>
+        <div class="ql-body">
+          <div class="ql-label">Bucket 7 · Personal Development</div>
+          <div class="ql-title">Mindset & Goals</div>
+          <div class="ql-desc">Daily habits · goal tracking · Hector's philosophy · building to expand</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHILOSOPHY -->
+  <div class="reveal">
+    <div class="sec-hdr">
+      <h2 class="sec-title">The Philosophy</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="phil-row">
+      <div class="phil-card hector">
+        <div class="phil-name">Hector LaMarque — Your Upline</div>
+        <div class="phil-q">"To keep people long term, teach them to become professional salespeople so they consistently make money. If they don't make significant income, it's only a matter of time before they quit. Income-producing activity first, every single day."</div>
+      </div>
+      <div class="phil-card keith">
+        <div class="phil-name">Keith Otto — Core Fundamentals</div>
+        <div class="phil-q">"Systems duplicate — personality doesn't. Master the fundamentals: prospect daily, run the FNA, recruit, license, stay accountable. Every appointment is a recruiting appointment."</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-left"><strong>PRI Training System</strong> · Amy Vasquez · Team Vasquez · San Clemente, CA</div>
+  <div class="footer-right">v2.0 · one site · all tools</div>
+</footer>
+
+<script>
+const reveals=document.querySelectorAll('.reveal');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target);}});
+},{threshold:0.06});
+reveals.forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
