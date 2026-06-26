@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Calculators | Team Vasquez</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --navy:#1B2A4A;--purple:#5C55B0;--purple-lt:#EEEDFE;
+  --teal:#0F7A5C;--teal-lt:#E1F5EE;--blue:#1A6FAF;--blue-lt:#E6F1FB;
+  --amber:#9A6010;--amber-lt:#FEF3DC;--coral:#B04422;--coral-lt:#FAECE7;
+  --green:#27500A;--green-lt:#EAF3DE;--gold:#C9A84C;
+  --rule:#E0DDD5;--bg:#F5F3EE;--surface:#fff;
+  --text:#1A1917;--text2:#5C5955;--text3:#9A9590;--r:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* NAV */
+.top-bar{background:var(--navy);display:flex;align-items:center;gap:0;overflow-x:auto;padding:0;}
+.top-brand{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--gold);padding:.8rem 1.25rem;white-space:nowrap;border-right:1px solid rgba(255,255,255,.1);flex-shrink:0;}
+.nav-btn{padding:.8rem 1rem;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.55);border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;}
+.nav-btn:hover{color:#fff;}
+.nav-btn.active{color:#fff;border-bottom-color:var(--gold);}
+
+/* LAYOUT */
+.page{display:none;max-width:860px;margin:0 auto;padding:1.75rem 1.5rem 3rem;}
+.page.active{display:block;}
+
+/* HEADERS */
+.pg-eye{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:.35rem;}
+.pg-title{font-family:'Playfair Display',serif;font-size:1.55rem;color:var(--navy);margin-bottom:.4rem;line-height:1.2;}
+.pg-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:1.25rem;max-width:560px;}
+.disclaimer{font-size:11px;color:var(--text3);line-height:1.7;padding:.75rem 1rem;background:var(--surface);border:0.5px solid var(--rule);border-radius:6px;margin-bottom:1.25rem;}
+
+/* CARDS */
+.card{background:var(--surface);border:0.5px solid var(--rule);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.card-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:.85rem;padding-bottom:.6rem;border-bottom:0.5px solid var(--rule);}
+
+/* FORM GRID */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.form-grid{grid-template-columns:1fr;}}
+.form-grid.wide{grid-template-columns:1fr 1fr 1fr;}
+@media(max-width:620px){.form-grid.wide{grid-template-columns:1fr 1fr;}}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:12.5px;font-weight:500;color:var(--text2);}
+.input-wrap{position:relative;display:flex;align-items:center;}
+.input-pre,.input-suf{position:absolute;font-size:14px;color:var(--text3);pointer-events:none;z-index:1;}
+.input-pre{left:11px;}
+.input-suf{right:11px;font-size:12px;}
+input[type=number],input[type=text],select{width:100%;padding:9px 11px;border:1px solid var(--rule);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border .15s;-webkit-appearance:none;}
+input[type=number].pre{padding-left:26px;}
+input[type=number].suf{padding-right:32px;}
+input[type=number]:focus,input[type=text]:focus,select:focus{border-color:var(--purple);}
+.err-msg{font-size:11px;color:var(--coral);display:none;margin-top:2px;}
+.field.error input{border-color:var(--coral);}
+.field.error .err-msg{display:block;}
+
+/* DEBT ROWS */
+.debt-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:.85rem;}
+.debt-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end;}
+@media(max-width:580px){.debt-row{grid-template-columns:1fr 1fr;}}
+.debt-row .debt-name{font-size:12px;font-weight:500;color:var(--text3);margin-bottom:4px;}
+.remove-btn{width:32px;height:38px;border:0.5px solid var(--rule);border-radius:7px;background:var(--surface);color:var(--text3);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.remove-btn:hover{background:var(--coral-lt);border-color:var(--coral);color:var(--coral);}
+.add-debt-btn{padding:7px 14px;border:1px dashed var(--rule);border-radius:8px;background:transparent;color:var(--text2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;width:100%;margin-bottom:.85rem;}
+.add-debt-btn:hover{border-color:var(--purple-md);color:var(--purple);}
+
+/* EXTRAS */
+.extra-row{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;margin-bottom:.85rem;}
+.extra-label{font-size:13px;font-weight:500;color:var(--text2);white-space:nowrap;}
+
+/* CALC BTN */
+.calc-btn{width:100%;margin-top:.85rem;padding:14px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-family:'Playfair Display',serif;font-size:1.05rem;cursor:pointer;transition:background .15s;}
+.calc-btn:hover{background:#111C30;}
+
+/* RESULTS */
+.results{display:none;margin-top:1.25rem;}
+.results.show{display:block;}
+.insight{padding:.9rem 1.1rem;border-radius:9px;font-size:13.5px;line-height:1.55;margin-bottom:1rem;font-weight:500;}
+.insight.blue{background:var(--blue-lt);color:#0C3060;border-left:3px solid var(--blue);}
+.insight.green{background:var(--teal-lt);color:#054030;border-left:3px solid var(--teal);}
+.insight.amber{background:var(--amber-lt);color:#4A2E00;border-left:3px solid var(--amber);}
+.insight.coral{background:var(--coral-lt);color:#4A1B0C;border-left:3px solid var(--coral);}
+
+/* METRICS */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1rem;}
+.metric{background:var(--bg);border:0.5px solid var(--rule);border-radius:10px;padding:1rem .85rem;text-align:center;}
+.metric-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;font-family:'DM Mono',monospace;line-height:1.3;}
+.metric-value{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--navy);font-weight:700;}
+.metric-value.gold{color:var(--amber);}
+.metric-value.green{color:var(--teal);}
+.metric-value.coral{color:var(--coral);}
+
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;}
+.comp-table th{padding:9px 10px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:#fff;text-align:right;font-family:'DM Mono',monospace;}
+.comp-table th:first-child{text-align:left;}
+.comp-table td{padding:9px 10px;border-bottom:0.5px solid var(--rule);text-align:right;color:var(--text2);}
+.comp-table td:first-child{text-align:left;font-weight:500;color:var(--text);}
+.comp-table tbody tr:hover{background:var(--bg);}
+
+/* CHART */
+.chart-wrap{position:relative;height:260px;}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:12px;color:var(--text2);}
+.legend span{display:flex;align-items:center;gap:5px;}
+.ldot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* DEBT RESULTS */
+.debt-result-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;font-size:13px;padding:.6rem 0;border-bottom:0.5px solid var(--rule);}
+.debt-result-row.hdr{font-weight:600;color:var(--text);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);}
+.debt-result-row.total{font-weight:600;color:var(--navy);border-top:1px solid var(--navy);border-bottom:none;margin-top:4px;}
+
+@media(max-width:560px){.debt-result-row{grid-template-columns:1fr 1fr;}}
+@media print{.top-bar{display:none;}.page{display:block!important;page-break-before:always;}.page:first-of-type{page-break-before:avoid;}}
+
+/* SITE NAV */
+.site-nav{background:#1B2A4A;display:flex;align-items:center;flex-wrap:wrap;padding:0;border-bottom:1px solid rgba(255,255,255,.08);}
+.site-nav-brand{font-family:'Playfair Display',serif;font-size:.9rem;color:#C9A84C;padding:.7rem 1.1rem;white-space:nowrap;border-right:1px solid rgba(255,255,255,.1);text-decoration:none;flex-shrink:0;}
+.site-nav-brand:hover{color:#E8C870;}
+.site-nav-links{display:flex;flex-wrap:wrap;}
+.snl{padding:.7rem .95rem;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.snl:hover{color:#fff;}
+.snl.active{color:#fff;border-bottom-color:#C9A84C;}
+
+
+/* IPQ QUIZ */
+.ipq-progress-bar{height:4px;background:var(--rule);border-radius:2px;margin-bottom:1.5rem;overflow:hidden;}
+.ipq-progress-fill{height:100%;background:var(--purple);border-radius:2px;transition:width .4s ease;}
+.ipq-q-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem;}
+.ipq-q-text{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--navy);line-height:1.3;margin-bottom:.25rem;}
+.ipq-q-sub{font-size:12.5px;color:var(--text2);margin-bottom:1.1rem;line-height:1.5;}
+.ipq-options{display:flex;flex-direction:column;gap:9px;margin-bottom:1.5rem;}
+.ipq-opt{display:flex;align-items:center;gap:12px;padding:.8rem 1rem;border:1px solid var(--rule);border-radius:10px;cursor:pointer;transition:all .15s;background:var(--surface);}
+.ipq-opt:hover{border-color:var(--purple-md);background:var(--purple-lt);}
+.ipq-opt.selected{border-color:var(--purple);background:var(--purple-lt);}
+.ipq-opt input[type=radio]{width:16px;height:16px;accent-color:var(--purple);flex-shrink:0;}
+.ipq-opt-text{font-size:13.5px;color:var(--text);line-height:1.45;}
+.ipq-opt-pts{margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);padding:2px 7px;background:var(--bg);border-radius:6px;white-space:nowrap;flex-shrink:0;}
+.ipq-nav{display:flex;gap:10px;align-items:center;}
+.ipq-btn{padding:10px 22px;border-radius:9px;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;border:none;transition:all .15s;}
+.ipq-btn.next{background:var(--navy);color:#fff;margin-left:auto;}
+.ipq-btn.next:hover{background:#111C30;}
+.ipq-btn.back{background:transparent;color:var(--text2);border:1px solid var(--rule);}
+.ipq-btn.back:hover{background:var(--bg);}
+.ipq-btn:disabled{opacity:.4;cursor:not-allowed;}
+/* Results */
+.ipq-result-hero{background:var(--navy);border-radius:var(--r);padding:2rem 1.5rem;text-align:center;margin-bottom:1.25rem;position:relative;overflow:hidden;}
+.ipq-result-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(92,85,176,.2);border-radius:50%;}
+.ipq-result-eye{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.5rem;}
+.ipq-result-profile{font-family:'Playfair Display',serif;font-size:2rem;color:#fff;margin-bottom:.4rem;position:relative;z-index:1;}
+.ipq-result-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:.85rem;position:relative;z-index:1;}
+.ipq-result-desc{font-size:13.5px;color:rgba(255,255,255,.75);line-height:1.65;max-width:500px;margin:0 auto;position:relative;z-index:1;}
+.ipq-alloc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem;}
+.ipq-alloc-card{background:var(--surface);border:0.5px solid var(--rule);border-radius:10px;padding:.9rem .75rem;text-align:center;}
+.ipq-alloc-pct{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:3px;}
+.ipq-alloc-label{font-size:11px;color:var(--text2);line-height:1.3;}
+.ipq-score-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+.ipq-score-pill{font-size:12px;padding:4px 12px;border-radius:20px;background:var(--bg);border:0.5px solid var(--rule);color:var(--text2);}
+.ipq-retry-btn{padding:9px 20px;border-radius:9px;font-size:13px;font-weight:600;border:1px solid var(--rule);background:var(--surface);color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.ipq-retry-btn:hover{background:var(--bg);}
+.ipq-profiles-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;}
+.ipq-profile-pill{font-size:11px;font-weight:600;padding:4px 11px;border-radius:12px;opacity:.45;}
+.ipq-profile-pill.active{opacity:1;}
+.ipq-returns-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem;}
+@media(max-width:480px){.ipq-returns-grid{grid-template-columns:1fr 1fr;}}
+.ipq-return-card{background:var(--bg);border:0.5px solid var(--rule);border-radius:8px;padding:.75rem;text-align:center;}
+.ipq-return-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;font-family:'DM Mono',monospace;}
+.ipq-return-val{font-size:1rem;font-weight:700;color:var(--navy);font-family:'Playfair Display',serif;}
+.ipq-return-val.pos{color:var(--teal);}
+.ipq-return-val.neg{color:var(--coral);}
+
+
+@media print {
+  .top-bar, .site-nav, .page:not(#pg-ipq), .calc-btn,
+  .ipq-retry-btn:last-child, .disclaimer,
+  .ipq-progress-bar, .ipq-nav, .ipq-options,
+  .ipq-q-label, .ipq-q-text, .ipq-q-sub { }
+
+  /* Hide everything except IPQ results when printing */
+  .top-bar { display: none !important; }
+  .site-nav { display: none !important; }
+  .page { display: none !important; }
+  #pg-ipq { display: block !important; padding: 0 !important; }
+
+  /* Hide quiz questions, show only results */
+  .card:has(.ipq-progress-bar) { display: none !important; }
+  .ipq-progress-bar { display: none !important; }
+  .ipq-nav { display: none !important; }
+  .ipq-options { display: none !important; }
+  .ipq-q-label, .ipq-q-text, .ipq-q-sub { display: none !important; }
+
+  /* Hide retake button, keep print button hidden too */
+  .ipq-retry-btn { display: none !important; }
+
+  /* Style results nicely for print */
+  .ipq-result-hero { 
+    background: #1B2A4A !important; 
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  .ipq-result-profile { color: #fff !important; }
+  .ipq-result-desc { color: rgba(255,255,255,0.85) !important; }
+
+  /* Add branding header for print */
+  #pg-ipq::before {
+    content: "Team Vasquez · Financial Tools · Investment Profile Questionnaire";
+    display: block;
+    font-family: sans-serif;
+    font-size: 11px;
+    color: #888;
+    text-align: right;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 1rem;
+  }
+
+  /* Page setup */
+  @page { margin: 1.5cm; size: portrait; }
+  body { background: white !important; }
+  .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+}
+
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Site navigation">
+  <a class="site-nav-brand" href="index.html">PRI System</a>
+  <div class="site-nav-links">
+    <a class="snl" href="index.html" id="snl-home">🏠 Home</a>
+    <a class="snl" href="pri_script_library_v2.html" id="snl-scripts">📝 Script Library</a>
+    <a class="snl" href="pri_workflows_and_scripts.html" id="snl-workflows">📋 Workflows</a>
+    <a class="snl" href="pri_financial_calculators.html" id="snl-calculators">🧮 Calculators</a>
+  </div>
+</nav>
+<script>
+(function(){
+  var path=window.location.pathname.split('/').pop()||'index.html';
+  var map={'index.html':'snl-home','pri_script_library_v2.html':'snl-scripts','pri_workflows_and_scripts.html':'snl-workflows','pri_financial_calculators.html':'snl-calculators'};
+  var id=map[path];
+  if(id){var el=document.getElementById(id);if(el)el.classList.add('active');}
+})();
+</script>
+
+<div class="top-bar">
+  <div class="top-brand">Team Vasquez · Financial Tools</div>
+  <button class="nav-btn active" onclick="showPage('time',this)">⏱ Time Value</button>
+  <button class="nav-btn" onclick="showPage('waiting',this)">⏳ Cost of Waiting</button>
+  <button class="nav-btn" onclick="showPage('fin',this)">🎯 FIN Calculator</button>
+  <button class="nav-btn" onclick="showPage('debt',this)">💳 Debt Stacking</button>
+  <button class="nav-btn" onclick="showPage('compound',this)">📈 Compound Interest</button>
+  <button class="nav-btn" onclick="showPage('ipq',this)">📊 Investment Profile</button>
+</div>
+
+<!-- ══════════════════════════════════════
+  1. TIME VALUE OF MONEY
+══════════════════════════════════════ -->
+<div class="page active" id="pg-time">
+  <div class="pg-eye">Calculator 1 of 5</div>
+  <h1 class="pg-title">Time Value of Money</h1>
+  <p class="pg-sub">Shows how starting early — even for just a few years — beats contributing longer but starting later. The earlier you start, the less you have to put in.</p>
+  <div class="disclaimer">Hypothetical 9% nominal rate of return, compounded monthly. Not guaranteed and not indicative of any actual investment. Does not account for fees, taxes, or charges. Assumes payments made at beginning of each year.</div>
+  <div class="card">
+    <div class="card-title">Enter your values</div>
+    <div class="form-grid">
+      <div class="field" id="tv-f1">
+        <label>Annual Contribution ($)</label>
+        <div class="input-wrap"><span class="input-pre">$</span><input type="number" id="tv-contrib" value="2400" min="1" class="pre"></div>
+        <div class="err-msg">Please enter a positive number.</div>
+      </div>
+      <div class="field" id="tv-f2">
+        <label>Starting Contribution Age</label>
+        <input type="number" id="tv-start" value="22" min="1">
+        <div class="err-msg">Must be less than ending age.</div>
+      </div>
+      <div class="field" id="tv-f3">
+        <label>Ending Contribution Age</label>
+        <input type="number" id="tv-end" value="29" min="1">
+        <div class="err-msg">Must be between start and retirement age.</div>
+      </div>
+      <div class="field" id="tv-f4">
+        <label>Retirement Age</label>
+        <input type="number" id="tv-retire" value="65" min="1">
+        <div class="err-msg">Must be greater than ending age.</div>
+      </div>
+      <div class="field" id="tv-f5">
+        <label>Annual Rate of Return (%)</label>
+        <div class="input-wrap"><input type="number" id="tv-rate" value="9" min="0.1" step="0.1" class="suf"><span class="input-suf">%</span></div>
+        <div class="err-msg">Please enter a positive number.</div>
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calcTimeValue()">Calculate</button>
+  </div>
+  <div class="results" id="tv-results">
+    <div class="insight blue" id="tv-insight"></div>
+    <div class="card">
+      <div class="card-title">Comparison — Early Starter vs. Late Starter</div>
+      <div class="metric-grid" id="tv-metrics"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Growth Over Time</div>
+      <div class="legend">
+        <span><span class="ldot" style="background:#5C55B0"></span>Early starter (stops at your ending age)</span>
+        <span><span class="ldot" style="background:#1D9E75"></span>Late starter (begins at your ending age, contributes to retirement)</span>
+      </div>
+      <div class="chart-wrap"><canvas id="tv-chart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  2. COST OF WAITING
+══════════════════════════════════════ -->
+<div class="page" id="pg-waiting">
+  <div class="pg-eye">Calculator 2 of 5</div>
+  <h1 class="pg-title">The High Cost of Waiting</h1>
+  <p class="pg-sub">Pay yourself first. When you don\'t, there\'s a high cost of waiting. This shows exactly who gets hurt when someone delays investing.</p>
+  <div class="disclaimer">Rates of return are constant and nominal rates, compounded monthly. Contributions assumed at beginning of month. Does not consider taxes or deductions.</div>
+  <div class="card">
+    <div class="card-title">Enter your values</div>
+    <div class="form-grid">
+      <div class="field" id="w-f1">
+        <label>Monthly Contribution ($)</label>
+        <div class="input-wrap"><span class="input-pre">$</span><input type="number" id="w-contrib" value="200" min="1" class="pre"></div>
+        <div class="err-msg">Please enter a positive number.</div>
+      </div>
+      <div class="field" id="w-f2">
+        <label>Starting Age</label>
+        <input type="number" id="w-start" value="25" min="1">
+        <div class="err-msg">Must be less than retirement age.</div>
+      </div>
+      <div class="field" id="w-f3">
+        <label>Retirement Age</label>
+        <input type="number" id="w-retire" value="65" min="1">
+        <div class="err-msg">Must be greater than starting age.</div>
+      </div>
+      <div class="field" id="w-f4">
+        <label>Annual Rate of Return (%)</label>
+        <div class="input-wrap"><input type="number" id="w-rate" value="9" min="0.1" step="0.1" class="suf"><span class="input-suf">%</span></div>
+        <div class="err-msg">Please enter a positive number.</div>
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calcWaiting()">Calculate</button>
+  </div>
+  <div class="results" id="w-results">
+    <div class="insight coral" id="w-insight"></div>
+    <div class="card">
+      <div class="card-title">Start Now vs. Wait 5 / 10 / 15 Years</div>
+      <div style="overflow-x:auto"><table class="comp-table" id="w-table"></table></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Growth Comparison</div>
+      <div class="legend">
+        <span><span class="ldot" style="background:#1D9E75"></span>Start now</span>
+        <span><span class="ldot" style="background:#9A6010"></span>Wait 5 years</span>
+        <span><span class="ldot" style="background:#B04422"></span>Wait 10 years</span>
+        <span><span class="ldot" style="background:#888780"></span>Wait 15 years</span>
+      </div>
+      <div class="chart-wrap"><canvas id="w-chart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  3. FIN CALCULATOR
+══════════════════════════════════════ -->
+<div class="page" id="pg-fin">
+  <div class="pg-eye">Calculator 3 of 5</div>
+  <h1 class="pg-title">Financial Independence Number</h1>
+  <p class="pg-sub">What is your number? How much do you need saved to retire at your desired income level? This calculator works it out across three growth scenarios.</p>
+  <div class="disclaimer">Hypothetical illustration only. Uses constant rates of return. Does not include fees, taxes, or expenses. Assumes 3% inflation rate and 6% return during retirement unless you change them. No Social Security or pension assumed unless entered.</div>
+  <div class="card">
+    <div class="card-title">Your situation</div>
+    <div class="form-grid">
+      <div class="field"><label>Current Age</label><input type="number" id="fin-age" value="35" min="1"></div>
+      <div class="field"><label>Target Retirement Age</label><input type="number" id="fin-retire" value="65" min="1"></div>
+      <div class="field"><label>Life Expectancy</label><input type="number" id="fin-life" value="90" min="1"></div>
+      <div class="field"><label>Current Annual Income ($)</label><div class="input-wrap"><span class="input-pre">$</span><input type="number" id="fin-income" value="60000" min="1" class="pre"></div></div>
+      <div class="field"><label>Target Annual Retirement Income ($)</label><div class="input-wrap"><span class="input-pre">$</span><input type="number" id="fin-target" value="50000" min="1" class="pre"></div></div>
+      <div class="field"><label>Current Savings ($)</label><div class="input-wrap"><span class="input-pre">$</span><input type="number" id="fin-savings" value="0" min="0" class="pre"></div></div>
+      <div class="field"><label>Expected Soc. Security / Pension ($/yr)</label><div class="input-wrap"><span class="input-pre">$</span><input type="number" id="fin-ss" value="0" min="0" class="pre"></div></div>
+      <div class="field"><label>Annual Inflation Rate (%)</label><div class="input-wrap"><input type="number" id="fin-inflation" value="3" min="0.1" step="0.1" class="suf"><span class="input-suf">%</span></div></div>
+      <div class="field"><label>Return During Retirement (%)</label><div class="input-wrap"><input type="number" id="fin-ret-rate" value="6" min="0.1" step="0.1" class="suf"><span class="input-suf">%</span></div></div>
+    </div>
+    <div class="card-title" style="margin-top:1rem">Pre-retirement return scenarios</div>
+    <div class="form-grid">
+      <div class="field"><label>Low rate (%)</label><div class="input-wrap"><input type="number" id="fin-low" value="6" min="0.1" step="0.1" class="suf"><span class="input-suf">%</span></div></div>
+      <div class="field"><label>Medium rate (%)</label><div class="input-wrap"><input type="number" id="fin-med" value="8" min="0.1" step="0.1" class="suf"><span class="input-suf">%</span></div></div>
+      <div class="field"><label>High rate (%)</label><div class="input-wrap"><input type="number" id="fin-high" value="10" min="0.1" step="0.1" class="suf"><span class="input-suf">%</span></div></div>
+    </div>
+    <button class="calc-btn" onclick="calcFIN()">Calculate My FIN</button>
+  </div>
+  <div class="results" id="fin-results">
+    <div class="insight green" id="fin-insight"></div>
+    <div class="card">
+      <div class="card-title">Your Financial Independence Number</div>
+      <div class="metric-grid" id="fin-metrics"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Monthly savings needed by scenario</div>
+      <div style="overflow-x:auto"><table class="comp-table" id="fin-table"></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  4. DEBT STACKING
+══════════════════════════════════════ -->
+<div class="page" id="pg-debt">
+  <div class="pg-eye">Calculator 4 of 5</div>
+  <h1 class="pg-title">Debt Stacking</h1>
+  <p class="pg-sub">Enter all your debts. The calculator shows you the fastest payoff order — highest interest first — and how adding even a little extra each month dramatically cuts your total interest paid.</p>
+  <div class="card">
+    <div class="card-title">Your debts</div>
+    <div class="debt-row hdr" style="padding:.4rem 0;margin-bottom:4px;">
+      <div class="debt-name">Debt name</div>
+      <div class="debt-name">Balance ($)</div>
+      <div class="debt-name">Interest (%)</div>
+      <div class="debt-name">Min. payment ($)</div>
+      <div></div>
+    </div>
+    <div class="debt-rows" id="debt-rows"></div>
+    <button class="add-debt-btn" onclick="addDebtRow()">+ Add another debt</button>
+    <div class="extra-row">
+      <div class="extra-label">Your age:</div>
+      <input type="number" id="debt-age" value="35" min="1" style="max-width:120px;">
+    </div>
+    <div class="extra-row">
+      <div class="extra-label">Extra $ per month:</div>
+      <div class="input-wrap" style="max-width:160px;"><span class="input-pre">$</span><input type="number" id="debt-extra" value="100" min="0" class="pre"></div>
+    </div>
+    <button class="calc-btn" onclick="calcDebt()">Calculate Payoff Plan</button>
+  </div>
+  <div class="results" id="debt-results">
+    <div class="insight amber" id="debt-insight"></div>
+    <div class="card">
+      <div class="card-title">Payoff order (highest interest first — avalanche method)</div>
+      <div id="debt-table-wrap"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">With vs. without extra payment</div>
+      <div class="metric-grid" id="debt-metrics"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Balance over time</div>
+      <div class="chart-wrap"><canvas id="debt-chart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  5. COMPOUND INTEREST
+══════════════════════════════════════ -->
+<div class="page" id="pg-compound">
+  <div class="pg-eye">Calculator 5 of 5</div>
+  <h1 class="pg-title">Compound Interest</h1>
+  <p class="pg-sub">The most powerful force in finance. See how your money grows with different rates, timeframes, and contribution amounts — with a full year-by-year breakdown.</p>
+  <div class="card">
+    <div class="card-title">Enter your values</div>
+    <div class="form-grid">
+      <div class="field"><label>Starting Principal ($)</label><div class="input-wrap"><span class="input-pre">$</span><input type="number" id="ci-principal" value="10000" min="0" class="pre"></div></div>
+      <div class="field"><label>Years to Grow</label><input type="number" id="ci-years" value="20" min="1" max="60"></div>
+      <div class="field"><label>Interest Rate (%)</label><div class="input-wrap"><input type="number" id="ci-rate" value="9" min="0.1" step="0.1" class="suf"><span class="input-suf">%</span></div></div>
+      <div class="field"><label>Compound Frequency</label>
+        <select id="ci-freq">
+          <option value="12" selected>Monthly</option>
+          <option value="4">Quarterly</option>
+          <option value="2">Biannually</option>
+          <option value="1">Annually</option>
+          <option value="365">Daily</option>
+        </select>
+      </div>
+      <div class="field"><label>Monthly Contribution ($)</label><div class="input-wrap"><span class="input-pre">$</span><input type="number" id="ci-contrib" value="200" min="0" class="pre"></div></div>
+      <div class="field"><label>Retirement Goal (optional $)</label><div class="input-wrap"><span class="input-pre">$</span><input type="number" id="ci-goal" placeholder="e.g. 1000000" min="0" class="pre"></div></div>
+    </div>
+    <button class="calc-btn" onclick="calcCompound()">Calculate Growth</button>
+  </div>
+  <div class="results" id="ci-results">
+    <div class="insight blue" id="ci-insight"></div>
+    <div class="card"><div class="metric-grid" id="ci-metrics"></div></div>
+    <div class="card">
+      <div class="card-title">Growth over time</div>
+      <div class="legend">
+        <span><span class="ldot" style="background:#5C55B0"></span>Your rate</span>
+        <span><span class="ldot" style="background:#1D9E75"></span>3% (savings account)</span>
+        <span><span class="ldot" style="background:#9A6010"></span>6% (conservative)</span>
+      </div>
+      <div class="chart-wrap"><canvas id="ci-chart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Contributions vs. interest earned</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="ci-pie"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Year-by-year breakdown</div>
+      <div style="overflow-x:auto"><table class="comp-table" id="ci-table"></table></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── NAV ──────────────────────────────────────────────────────────
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const fmt = n => '$'+Math.round(n).toLocaleString();
+const fmtK = v => v>=1000000?'$'+(v/1000000).toFixed(1)+'M':'$'+Math.round(v/1000)+'k';
+const fmtD = n => '$'+n.toFixed(2);
+let charts = {};
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+// ── 1. TIME VALUE ─────────────────────────────────────────────────
+function calcTimeValue(){
+  const contrib = parseFloat($('tv-contrib').value)||0;
+  const startAge = parseInt($('tv-start').value)||0;
+  const endAge = parseInt($('tv-end').value)||0;
+  const retireAge = parseInt($('tv-retire').value)||0;
+  const rate = (parseFloat($('tv-rate').value)||9)/100;
+  if(!contrib||startAge>=endAge||endAge>=retireAge){
+    alert('Please check your inputs — start age must be less than end age, which must be less than retirement age.');return;
+  }
+  const r = rate/12;
+  // Early starter: contributes annually from startAge to endAge, then lets it grow
+  let earlyBal = 0;
+  const earlyYears = retireAge - startAge;
+  const earlyData = [];
+  for(let y=0;y<earlyYears;y++){
+    if(y < (endAge-startAge)) earlyBal += contrib/12;
+    earlyBal *= (1+r);
+    if(y<(endAge-startAge)) earlyBal += contrib*(11/12);
+    else earlyBal *= Math.pow(1+r,11);
+    earlyData.push(Math.round(earlyBal));
+  }
+  // Actually recalc properly
+  earlyBal = 0;
+  const earlyContribYrs = endAge - startAge;
+  const earlyGrowYrs = retireAge - endAge;
+  for(let y=0;y<earlyContribYrs;y++){
+    earlyBal = (earlyBal + contrib) * Math.pow(1+r,12);
+  }
+  const earlyFinal = earlyBal * Math.pow(1+r,12*earlyGrowYrs);
+  const earlyTotal = contrib * earlyContribYrs;
+
+  // Late starter: contributes from endAge to retireAge
+  let lateBal = 0;
+  const lateContribYrs = retireAge - endAge;
+  for(let y=0;y<lateContribYrs;y++){
+    lateBal = (lateBal + contrib) * Math.pow(1+r,12);
+  }
+  const lateFinal = lateBal;
+  const lateTotal = contrib * lateContribYrs;
+
+  // Build chart data
+  const labels=[];
+  const earlyArr=[];
+  const lateArr=[];
+  let eb=0,lb=0;
+  const totalYrs = retireAge - startAge;
+  for(let y=0;y<totalYrs;y++){
+    const age = startAge+y;
+    labels.push(age);
+    if(y<earlyContribYrs) eb=(eb+contrib)*Math.pow(1+r,12);
+    else eb=eb*Math.pow(1+r,12);
+    earlyArr.push(Math.round(eb));
+    if(age>=endAge) lb=(lb+contrib)*Math.pow(1+r,12);
+    lateArr.push(Math.round(lb));
+  }
+
+  $('tv-insight').innerHTML=`📊 <strong>Early starter</strong> contributes ${fmt(earlyTotal)} total (${earlyContribYrs} years) and retires with <strong>${fmt(earlyFinal)}</strong>. Late starter contributes ${fmt(lateTotal)} (${lateContribYrs} years) and retires with <strong>${fmt(lateFinal)}</strong>. The early starter wins by <strong>${fmt(earlyFinal-lateFinal)}</strong> — putting in LESS money.`;
+  $('tv-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Early starter final</div><div class="metric-value">${fmt(earlyFinal)}</div></div>
+    <div class="metric"><div class="metric-label">Early total contributed</div><div class="metric-value gold">${fmt(earlyTotal)}</div></div>
+    <div class="metric"><div class="metric-label">Late starter final</div><div class="metric-value">${fmt(lateFinal)}</div></div>
+    <div class="metric"><div class="metric-label">Late total contributed</div><div class="metric-value gold">${fmt(lateTotal)}</div></div>
+    <div class="metric"><div class="metric-label">Advantage (early)</div><div class="metric-value green">${fmt(earlyFinal-lateFinal)}</div></div>
+    <div class="metric"><div class="metric-label">Less contributed</div><div class="metric-value green">${fmt(Math.max(0,lateTotal-earlyTotal))}</div></div>`;
+  destroyChart('tv');
+  charts['tv']=new Chart($('tv-chart'),{type:'line',data:{labels,datasets:[
+    {label:'Early starter',data:earlyArr,borderColor:'#5C55B0',backgroundColor:'rgba(92,85,176,0.08)',pointRadius:0,borderWidth:2.5,fill:true,tension:0.3},
+    {label:'Late starter',data:lateArr,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.05)',pointRadius:0,borderWidth:2,fill:true,tension:0.3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y)}}},scales:{x:{title:{display:true,text:'Age'},ticks:{color:'#888',font:{size:11}}},y:{ticks:{callback:v=>fmtK(v),color:'#888',font:{size:11}}}}}});
+  $('tv-results').classList.add('show');
+  setTimeout(()=>$('tv-results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+// ── 2. COST OF WAITING ────────────────────────────────────────────
+function calcWaiting(){
+  const contrib = parseFloat($('w-contrib').value)||0;
+  const startAge = parseInt($('w-start').value)||0;
+  const retireAge = parseInt($('w-retire').value)||0;
+  const rate = (parseFloat($('w-rate').value)||9)/100/12;
+  if(!contrib||startAge>=retireAge){alert('Please check your inputs.');return;}
+  function calcFV(delayYrs){
+    const actualStart = startAge+delayYrs;
+    if(actualStart>=retireAge) return {fv:0,total:0};
+    const months=(retireAge-actualStart)*12;
+    let bal=0;
+    for(let m=0;m<months;m++) bal=(bal+contrib)*(1+rate);
+    return {fv:bal,total:contrib*months};
+  }
+  const now=calcFV(0),w5=calcFV(5),w10=calcFV(10),w15=calcFV(15);
+  $('w-insight').innerHTML=`💸 Waiting just <strong>5 years</strong> to start costs you <strong>${fmt(now.fv-w5.fv)}</strong> by retirement. Waiting <strong>10 years</strong> costs <strong>${fmt(now.fv-w10.fv)}</strong>. Start now — your future self will thank you.`;
+  $('w-table').innerHTML=`<thead><tr>
+    <th style="background:var(--navy);text-align:left">Scenario</th>
+    <th style="background:#085041">Start now (age ${startAge})</th>
+    <th style="background:#9A6010">Wait 5 yrs (age ${startAge+5})</th>
+    <th style="background:#B04422">Wait 10 yrs (age ${startAge+10})</th>
+    <th style="background:#555550">Wait 15 yrs (age ${startAge+15})</th>
+  </tr></thead><tbody>
+    <tr><td>Final balance</td><td>${fmt(now.fv)}</td><td>${fmt(w5.fv)}</td><td>${fmt(w10.fv)}</td><td>${fmt(w15.fv)}</td></tr>
+    <tr><td>Total contributed</td><td>${fmt(now.total)}</td><td>${fmt(w5.total)}</td><td>${fmt(w10.total)}</td><td>${fmt(w15.total)}</td></tr>
+    <tr><td>Interest earned</td><td>${fmt(now.fv-now.total)}</td><td>${fmt(Math.max(0,w5.fv-w5.total))}</td><td>${fmt(Math.max(0,w10.fv-w10.total))}</td><td>${fmt(Math.max(0,w15.fv-w15.total))}</td></tr>
+    <tr><td>Cost of waiting</td><td>—</td><td style="color:#B04422;font-weight:600">${fmt(now.fv-w5.fv)}</td><td style="color:#B04422;font-weight:600">${fmt(now.fv-w10.fv)}</td><td style="color:#B04422;font-weight:600">${fmt(now.fv-w15.fv)}</td></tr>
+  </tbody>`;
+  const yrs=retireAge-startAge;
+  const labels=Array.from({length:yrs},(_,i)=>startAge+i);
+  function buildSeries(delayYrs){
+    let bal=0;const arr=[];
+    for(let y=0;y<yrs;y++){
+      const age=startAge+y;
+      if(age>=startAge+delayYrs&&age<retireAge){
+        for(let m=0;m<12;m++) bal=(bal+contrib)*(1+rate);
+      }
+      arr.push(Math.round(bal));
+    }
+    return arr;
+  }
+  destroyChart('w');
+  charts['w']=new Chart($('w-chart'),{type:'line',data:{labels,datasets:[
+    {label:'Now',data:buildSeries(0),borderColor:'#1D9E75',pointRadius:0,borderWidth:2.5,tension:0.3,backgroundColor:'transparent'},
+    {label:'5yr',data:buildSeries(5),borderColor:'#9A6010',pointRadius:0,borderWidth:2,tension:0.3,backgroundColor:'transparent'},
+    {label:'10yr',data:buildSeries(10),borderColor:'#B04422',pointRadius:0,borderWidth:2,tension:0.3,backgroundColor:'transparent'},
+    {label:'15yr',data:buildSeries(15),borderColor:'#888780',pointRadius:0,borderWidth:1.5,tension:0.3,backgroundColor:'transparent'},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y)}}},scales:{x:{title:{display:true,text:'Age'},ticks:{color:'#888',font:{size:11}}},y:{ticks:{callback:v=>fmtK(v),color:'#888',font:{size:11}}}}}});
+  $('w-results').classList.add('show');
+  setTimeout(()=>$('w-results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+// ── 3. FIN ────────────────────────────────────────────────────────
+function calcFIN(){
+  const curAge=parseInt($('fin-age').value)||35;
+  const retireAge=parseInt($('fin-retire').value)||65;
+  const lifeExp=parseInt($('fin-life').value)||90;
+  const income=parseFloat($('fin-income').value)||60000;
+  const targetIncome=parseFloat($('fin-target').value)||50000;
+  const curSavings=parseFloat($('fin-savings').value)||0;
+  const ss=parseFloat($('fin-ss').value)||0;
+  const inflation=(parseFloat($('fin-inflation').value)||3)/100;
+  const retRate=(parseFloat($('fin-ret-rate').value)||6)/100;
+  const lowRate=(parseFloat($('fin-low').value)||6)/100;
+  const medRate=(parseFloat($('fin-med').value)||8)/100;
+  const highRate=(parseFloat($('fin-high').value)||10)/100;
+  if(curAge>=retireAge||retireAge>=lifeExp){alert('Please check age inputs.');return;}
+  const yrsToRetire=retireAge-curAge;
+  const yrsInRetire=lifeExp-retireAge;
+  // Adjust target income for inflation
+  const inflatedIncome=targetIncome*Math.pow(1+inflation,yrsToRetire);
+  const annualNeed=Math.max(0,inflatedIncome-ss);
+  // FIN = present value of annuity at retirement
+  const FIN = retRate>0 ? annualNeed*(1-Math.pow(1+retRate,-yrsInRetire))/retRate : annualNeed*yrsInRetire;
+  // Monthly savings needed at each rate
+  function monthlyNeeded(rate){
+    const r=rate/12,n=yrsToRetire*12;
+    const fvSavings=curSavings*Math.pow(1+r,n);
+    const need=Math.max(0,FIN-fvSavings);
+    if(r===0) return need/n;
+    return need*r/(Math.pow(1+r,n)-1);
+  }
+  const mlLow=monthlyNeeded(lowRate),mlMed=monthlyNeeded(medRate),mlHigh=monthlyNeeded(highRate);
+  $('fin-insight').innerHTML=`🎯 Your <strong>Financial Independence Number</strong> is <strong>${fmt(FIN)}</strong> — that\'s what you need saved by retirement (age ${retireAge}) to generate ${fmt(targetIncome)}/year (adjusted for inflation) for ${yrsInRetire} years.`;
+  $('fin-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Your FIN</div><div class="metric-value">${fmt(FIN)}</div></div>
+    <div class="metric"><div class="metric-label">Years to save</div><div class="metric-value">${yrsToRetire}</div></div>
+    <div class="metric"><div class="metric-label">Inflation-adjusted need</div><div class="metric-value gold">${fmt(inflatedIncome)}/yr</div></div>
+    <div class="metric"><div class="metric-label">Annual from SS/Pension</div><div class="metric-value green">${fmt(ss)}</div></div>
+    <div class="metric"><div class="metric-label">Current savings</div><div class="metric-value">${fmt(curSavings)}</div></div>
+    <div class="metric"><div class="metric-label">Years in retirement</div><div class="metric-value">${yrsInRetire}</div></div>`;
+  $('fin-table').innerHTML=`<thead><tr>
+    <th style="background:var(--navy);text-align:left">Scenario</th>
+    <th style="background:#B04422">Low (${($('fin-low').value)}%)</th>
+    <th style="background:#9A6010">Medium (${($('fin-med').value)}%)</th>
+    <th style="background:#085041">High (${($('fin-high').value)}%)</th>
+  </tr></thead><tbody>
+    <tr><td>Monthly savings needed</td><td>${fmt(mlLow)}</td><td>${fmt(mlMed)}</td><td>${fmt(mlHigh)}</td></tr>
+    <tr><td>Annual savings needed</td><td>${fmt(mlLow*12)}</td><td>${fmt(mlMed*12)}</td><td>${fmt(mlHigh*12)}</td></tr>
+    <tr><td>Total contributed</td><td>${fmt(mlLow*12*yrsToRetire)}</td><td>${fmt(mlMed*12*yrsToRetire)}</td><td>${fmt(mlHigh*12*yrsToRetire)}</td></tr>
+  </tbody>`;
+  $('fin-results').classList.add('show');
+  setTimeout(()=>$('fin-results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+// ── 4. DEBT STACKING ──────────────────────────────────────────────
+let debtCount=0;
+function addDebtRow(name='',bal=0,rate=0,min=0){
+  debtCount++;
+  const id=debtCount;
+  const row=document.createElement('div');
+  row.className='debt-row';
+  row.id='dr-'+id;
+  row.innerHTML=`
+    <div class="field"><input type="text" placeholder="e.g. Credit card" value="${name}" id="dn-${id}"></div>
+    <div class="field"><div class="input-wrap"><span class="input-pre">$</span><input type="number" placeholder="5000" value="${bal||''}" min="0" class="pre" id="db-${id}"></div></div>
+    <div class="field"><div class="input-wrap"><input type="number" placeholder="18.9" value="${rate||''}" min="0" step="0.1" class="suf" id="dr2-${id}"><span class="input-suf">%</span></div></div>
+    <div class="field"><div class="input-wrap"><span class="input-pre">$</span><input type="number" placeholder="150" value="${min||''}" min="0" class="pre" id="dm-${id}"></div></div>
+    <button class="remove-btn" onclick="this.parentElement.remove()">×</button>`;
+  $('debt-rows').appendChild(row);
+}
+// Pre-populate with 3 example debts
+addDebtRow('Credit Card 1',5000,19.9,150);
+addDebtRow('Car Loan',12000,6.5,280);
+addDebtRow('Student Loan',20000,5.8,220);
+
+function calcDebt(){
+  const extra=parseFloat($('debt-extra').value)||0;
+  const age=parseInt($('debt-age').value)||35;
+  const rows=$('debt-rows').querySelectorAll('.debt-row');
+  const debts=[];
+  rows.forEach(r=>{
+    const id=r.id.split('-')[1];
+    const bal=parseFloat($('db-'+id)?.value)||0;
+    const rate=parseFloat($('dr2-'+id)?.value)||0;
+    const min=parseFloat($('dm-'+id)?.value)||0;
+    const name=$('dn-'+id)?.value||'Debt';
+    if(bal>0) debts.push({name,bal,rate:rate/100/12,min,origBal:bal});
+  });
+  if(!debts.length){alert('Please add at least one debt.');return;}
+  // Sort by interest rate descending (avalanche)
+  debts.sort((a,b)=>b.rate-a.rate);
+  function simulate(withExtra){
+    const d=debts.map(x=>({...x,bal:x.origBal}));
+    let month=0,totalInt=0;
+    const balHistory=d.map(()=>[]);
+    while(d.some(x=>x.bal>0)&&month<600){
+      month++;
+      let extraLeft=withExtra?extra:0;
+      d.forEach((debt,i)=>{
+        if(debt.bal<=0){balHistory[i].push(0);return;}
+        const intCharge=debt.bal*debt.rate;
+        totalInt+=intCharge;
+        debt.bal+=intCharge;
+        let pay=Math.min(debt.bal,debt.min);
+        if(i===0) pay=Math.min(debt.bal,debt.min+extraLeft);
+        else if(extraLeft>0&&d[0].bal<=0){pay=Math.min(debt.bal,debt.min+extraLeft);extraLeft=0;}
+        debt.bal=Math.max(0,debt.bal-pay);
+        balHistory[i].push(Math.round(debt.bal));
+      });
+    }
+    return{months:month,totalInt,balHistory};
+  }
+  const withOut=simulate(false),withIn=simulate(true);
+  const saved=withOut.totalInt-withIn.totalInt;
+  const moSaved=withOut.months-withIn.months;
+  $('debt-insight').innerHTML=`💡 Adding <strong>${fmt(extra)}/month</strong> extra saves you <strong>${fmt(saved)}</strong> in interest and pays off your debt <strong>${moSaved} months sooner</strong> (${Math.round(moSaved/12*10)/10} years).`;
+  let thtml=`<div class="debt-result-row hdr"><div>Debt</div><div>Balance</div><div>Rate</div><div>Est. payoff</div></div>`;
+  debts.forEach((d,i)=>{
+    const moPay=withIn.balHistory[i].findIndex(b=>b===0)+1||withIn.months;
+    thtml+=`<div class="debt-result-row"><div>${d.name}</div><div>${fmt(d.origBal)}</div><div>${(d.rate*12*100).toFixed(1)}%</div><div>${Math.ceil(moPay/12)} yrs ${moPay%12} mo</div></div>`;
+  });
+  const totalBal=debts.reduce((s,d)=>s+d.origBal,0);
+  thtml+=`<div class="debt-result-row total"><div>Total</div><div>${fmt(totalBal)}</div><div>—</div><div>${Math.ceil(withIn.months/12)} yrs ${withIn.months%12} mo</div></div>`;
+  $('debt-table-wrap').innerHTML=thtml;
+  $('debt-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Total balance</div><div class="metric-value">${fmt(totalBal)}</div></div>
+    <div class="metric"><div class="metric-label">Without extra — months</div><div class="metric-value coral">${withOut.months}</div></div>
+    <div class="metric"><div class="metric-label">With extra — months</div><div class="metric-value green">${withIn.months}</div></div>
+    <div class="metric"><div class="metric-label">Interest saved</div><div class="metric-value gold">${fmt(saved)}</div></div>`;
+  const maxLen=Math.max(withOut.months,withIn.months);
+  const step=Math.max(1,Math.floor(maxLen/40));
+  const labels=Array.from({length:Math.ceil(maxLen/step)},(_,i)=>i*step);
+  function totalByMonth(bh,len){return Array.from({length:len},(_,m)=>bh.reduce((s,arr)=>s+(arr[m]||0),0));}
+  const tWithOut=totalByMonth(withOut.balHistory,maxLen);
+  const tWithIn=totalByMonth(withIn.balHistory,maxLen);
+  destroyChart('debt');
+  charts['debt']=new Chart($('debt-chart'),{type:'line',data:{labels:labels.map(m=>m+' mo'),datasets:[
+    {label:'Without extra',data:labels.map(i=>tWithOut[i]||0),borderColor:'#B04422',pointRadius:0,borderWidth:2,tension:0.3,backgroundColor:'transparent'},
+    {label:'With extra',data:labels.map(i=>tWithIn[i]||0),borderColor:'#1D9E75',pointRadius:0,borderWidth:2.5,tension:0.3,backgroundColor:'rgba(29,158,117,0.06)',fill:true},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{font:{size:11},color:'#555'}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y)}}},scales:{y:{ticks:{callback:v=>fmtK(v),color:'#888',font:{size:11}}},x:{ticks:{color:'#888',font:{size:11}}}}}});
+  $('debt-results').classList.add('show');
+  setTimeout(()=>$('debt-results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+// ── 5. COMPOUND INTEREST ──────────────────────────────────────────
+function calcCompound(){
+  const P=parseFloat($('ci-principal').value)||0;
+  const years=parseInt($('ci-years').value)||20;
+  const rate=parseFloat($('ci-rate').value)||9;
+  const n=parseInt($('ci-freq').value)||12;
+  const contrib=parseFloat($('ci-contrib').value)||0;
+  const goal=parseFloat($('ci-goal').value)||0;
+  function fv(P,r,n,yr,m){
+    const rp=r/100/n,periods=yr*n,cpp=m*(12/n);
+    let bal=P*Math.pow(1+rp,periods);
+    bal+=rp>0?cpp*(Math.pow(1+rp,periods)-1)/rp:cpp*periods;
+    return bal;
+  }
+  const final=fv(P,rate,n,years,contrib);
+  const tc=P+contrib*12*years;
+  const interest=final-tc;
+  const f3=fv(P,3,n,years,contrib);
+  const f6=fv(P,6,n,years,contrib);
+  const labels=Array.from({length:years},(_,i)=>i+1);
+  const seriesMine=labels.map(y=>Math.round(fv(P,rate,n,y,contrib)));
+  const series3=labels.map(y=>Math.round(fv(P,3,n,y,contrib)));
+  const series6=labels.map(y=>Math.round(fv(P,6,n,y,contrib)));
+  let goalNote='';
+  if(goal>0){
+    let gy=null;
+    for(let y=1;y<=100;y++){if(fv(P,rate,n,y,contrib)>=goal){gy=y;break;}}
+    goalNote=gy?` At ${rate}%, you reach your goal of ${fmt(goal)} around year ${gy}.`:'At this rate you may not reach your goal within 100 years — consider increasing contributions or rate.';
+  }
+  $('ci-insight').innerHTML=`📈 ${fmt(P)} starting + ${fmt(contrib)}/month over ${years} years at ${rate}% grows to <strong>${fmt(final)}</strong>. You contributed ${fmt(tc)} — interest earned: <strong>${fmt(interest)}</strong>.${goalNote}`;
+  $('ci-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Final balance</div><div class="metric-value">${fmt(final)}</div></div>
+    <div class="metric"><div class="metric-label">Total contributed</div><div class="metric-value gold">${fmt(tc)}</div></div>
+    <div class="metric"><div class="metric-label">Interest earned</div><div class="metric-value green">${fmt(interest)}</div></div>
+    <div class="metric"><div class="metric-label">vs. 3% savings</div><div class="metric-value">${fmt(final-f3)} more</div></div>`;
+  destroyChart('ci');
+  charts['ci']=new Chart($('ci-chart'),{type:'line',data:{labels,datasets:[
+    {label:`${rate}% (your rate)`,data:seriesMine,borderColor:'#5C55B0',pointRadius:0,borderWidth:2.5,tension:0.3,backgroundColor:'rgba(92,85,176,0.07)',fill:true},
+    {label:'3%',data:series3,borderColor:'#1D9E75',pointRadius:0,borderWidth:1.5,tension:0.3,backgroundColor:'transparent'},
+    {label:'6%',data:series6,borderColor:'#9A6010',pointRadius:0,borderWidth:1.5,tension:0.3,backgroundColor:'transparent'},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`}}},scales:{x:{title:{display:true,text:'Year'},ticks:{color:'#888',font:{size:11}}},y:{ticks:{callback:v=>fmtK(v),color:'#888',font:{size:11}}}}}});
+  destroyChart('ci-pie');
+  charts['ci-pie']=new Chart($('ci-pie'),{type:'doughnut',data:{labels:['Your contributions','Interest earned'],datasets:[{data:[Math.round(tc),Math.round(Math.max(0,interest))],backgroundColor:['#1B2A4A','#C9A84C'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:12},color:'#555'}},tooltip:{callbacks:{label:ctx=>ctx.label+': '+fmt(ctx.raw)}}}}});
+  let tRows='<thead><tr><th style="background:var(--navy);text-align:left">Year</th><th style="background:#9A6010">3%</th><th style="background:#1D9E75">6%</th><th style="background:#5C55B0">${rate}%</th><th style="background:#1B2A4A">Contributed</th></tr></thead><tbody>';
+  tRows=tRows.replace('${rate}%',rate+'%');
+  for(let y=1;y<=years;y++){
+    const tc2=P+contrib*12*y;
+    tRows+=`<tr><td>${y}</td><td style="color:#9A6010">${fmt(series3[y-1])}</td><td style="color:#085041">${fmt(series6[y-1])}</td><td style="color:#3C3489;font-weight:600">${fmt(seriesMine[y-1])}</td><td style="color:#1B2A4A">${fmt(tc2)}</td></tr>`;
+  }
+  tRows+='</tbody>';
+  $('ci-table').innerHTML=tRows;
+  $('ci-results').classList.add('show');
+  setTimeout(()=>$('ci-results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+</script>
+
+<!-- ══════════════════════════════════════
+  6. INVESTMENT PROFILE QUESTIONNAIRE
+══════════════════════════════════════ -->
+<div class="page" id="pg-ipq">
+  <div class="pg-eye">Tool 6 of 6</div>
+  <h1 class="pg-title">Investment Profile Questionnaire</h1>
+  <p class="pg-sub">9 questions · 3-4 minutes · Discover whether you\'re Conservative, Moderate, or Aggressive — and what that means for your portfolio.</p>
+  <div class="disclaimer">For educational purposes only. Not financial advice. Results are a starting point — consult your PFSI Registered Representative before making investment decisions.</div>
+  <div id="ipq-quiz"></div>
+</div>
+
+<script>
+// ── IPQ DATA ────────────────────────────────────────────────────────────────
+const IPQ_Qs = [
+  {
+    id: "q1",
+    text: "What is your primary investment goal?",
+    sub: "Choose the one that best describes what you want your money to do.",
+    opts: [
+      { text: "Generate current income — I need this money to pay expenses", pts: 0 },
+      { text: "Preserve what I have with modest growth", pts: 3 },
+      { text: "Balance growth and income over time", pts: 6 },
+      { text: "Grow my wealth significantly over the long term", pts: 9 },
+      { text: "Maximum long-term growth — I do not need current income", pts: 12 },
+    ]
+  },
+  {
+    id: "q2",
+    text: "When do you plan to start withdrawing this money?",
+    sub: "Your time horizon is one of the biggest factors in how you should invest.",
+    opts: [
+      { text: "Within the next 3 years", pts: 1 },
+      { text: "3–5 years from now", pts: 4 },
+      { text: "6–10 years from now", pts: 7 },
+      { text: "11–15 years from now", pts: 9 },
+      { text: "15+ years away", pts: 12 },
+    ]
+  },
+  {
+    id: "q3",
+    text: "Once you start withdrawing, how long will you need the money to last?",
+    sub: "Think about how long you will be drawing down this investment.",
+    opts: [
+      { text: "Less than 2 years — I will spend it fairly quickly", pts: 0 },
+      { text: "2–5 years", pts: 1 },
+      { text: "6–10 years", pts: 4 },
+      { text: "11+ years — I need it to last a long time", pts: 8 },
+    ]
+  },
+  {
+    id: "q4",
+    text: "The market drops 25% in 3 months. What is your gut reaction?",
+    sub: "Be honest — this is about how you would actually feel, not what you know is smart.",
+    opts: [
+      { text: "Sell everything immediately — I cannot watch it keep falling", pts: 0 },
+      { text: "Move to cash — preserve what is left", pts: 2 },
+      { text: "Feel anxious but hold my positions and wait it out", pts: 5 },
+      { text: "Stay calm and stick to the plan", pts: 8 },
+      { text: "Buy more — this is a great opportunity", pts: 10 },
+    ]
+  },
+  {
+    id: "q5",
+    text: "How stable is your primary source of income?",
+    sub: "Stable income means you may be able to weather market downturns more easily.",
+    opts: [
+      { text: "Variable — it fluctuates significantly year to year", pts: 0 },
+      { text: "Somewhat stable, mostly reliable with some uncertainty", pts: 3 },
+      { text: "Stable, salaried or predictable", pts: 6 },
+      { text: "Very stable — multiple income sources or fully set for retirement", pts: 9 },
+    ]
+  },
+  {
+    id: "q6",
+    text: "Which best describes your investing experience?",
+    sub: "More experience typically means more comfort with volatility.",
+    opts: [
+      { text: "Little to none — just getting started", pts: 0 },
+      { text: "Some experience — I have a 401(k) or brokerage account", pts: 3 },
+      { text: "Comfortable — I follow markets and make my own decisions", pts: 6 },
+      { text: "Experienced — invested through multiple market cycles", pts: 10 },
+    ]
+  },
+  {
+    id: "q7",
+    text: "What matters most to you right now financially?",
+    sub: "Select the option that resonates most with where you are today.",
+    opts: [
+      { text: "Not running out of money — security above all else", pts: 0 },
+      { text: "Protecting what I have already built", pts: 3 },
+      { text: "Growing wealth for retirement while staying somewhat protected", pts: 6 },
+      { text: "Generating as much growth as possible — I can handle the swings", pts: 10 },
+    ]
+  },
+  {
+    id: "q8",
+    text: "Which range of possible outcomes is most acceptable to you?",
+    sub: "Five hypothetical investment plans — same $100,000 invested. For illustration only.",
+    opts: [
+      { text: "Avg 7.1% / Best year +22.8% / Worst year -9.5%", pts: 0 },
+      { text: "Avg 8.3% / Best year +27.0% / Worst year -13.3%", pts: 3 },
+      { text: "Avg 9.2% / Best year +30.9% / Worst year -20.9%", pts: 6 },
+      { text: "Avg 9.8% / Best year +34.4% / Worst year -29.5%", pts: 8 },
+      { text: "Avg 10.2% / Best year +39.9% / Worst year -36.0%", pts: 10 },
+    ]
+  },
+  {
+    id: "q9",
+    text: "How much do you currently have in investable assets?",
+    sub: "This helps tailor your profile. Not a judgment — just context.",
+    opts: [
+      { text: "Under $10,000", pts: 2 },
+      { text: "$10,000–$50,000", pts: 4 },
+      { text: "$50,000–$250,000", pts: 7 },
+      { text: "$250,000–$1M", pts: 9 },
+      { text: "$1M+", pts: 12 },
+    ]
+  },
+];
+
+const IPQ_PROFILES = [
+  {
+    name: "Income",
+    minScore: 0, maxScore: 24,
+    tag: "Conservative",
+    tagColor: "#085041", tagBg: "#D0EEE6",
+    heroColor: "#085041",
+    desc: "Your primary objective is current income and capital preservation. You prefer stability over growth and want a portfolio that minimizes short-term losses — even if it means accepting lower long-term returns.",
+    alloc: [
+      { pct: "23%", label: "US Stocks", color: "#1A6FAF" },
+      { pct: "7%",  label: "Intl Stocks", color: "#5C55B0" },
+      { pct: "70%", label: "Bonds & Cash", color: "#9A6010" },
+    ],
+    avg: "7.1%", best: "+22.8%", worst: "-9.5%",
+    note: "Invesco/Primerica equivalent: Income Portfolio"
+  },
+  {
+    name: "Conservative Growth",
+    minScore: 25, maxScore: 42,
+    tag: "Moderately Conservative",
+    tagColor: "#27500A", tagBg: "#EAF3DE",
+    heroColor: "#1A6FAF",
+    desc: "You want a balance of current income and some capital appreciation. You are willing to tolerate some short-term price fluctuations but prefer a more protective mix of stocks and bonds.",
+    alloc: [
+      { pct: "38%", label: "US Stocks", color: "#1A6FAF" },
+      { pct: "12%", label: "Intl Stocks", color: "#5C55B0" },
+      { pct: "50%", label: "Bonds & Cash", color: "#9A6010" },
+    ],
+    avg: "8.3%", best: "+27.0%", worst: "-13.3%",
+    note: "Invesco/Primerica equivalent: Conservative Growth Portfolio"
+  },
+  {
+    name: "Moderate Growth",
+    minScore: 43, maxScore: 59,
+    tag: "Moderate",
+    tagColor: "#1A6FAF", tagBg: "#E6F1FB",
+    heroColor: "#5C55B0",
+    desc: "Your primary objective is capital appreciation, with income as a secondary goal. You are comfortable with some volatility in exchange for stronger long-term returns — a balanced mix tilted toward growth.",
+    alloc: [
+      { pct: "49%", label: "US Stocks", color: "#1A6FAF" },
+      { pct: "16%", label: "Intl Stocks", color: "#5C55B0" },
+      { pct: "35%", label: "Bonds & Cash", color: "#9A6010" },
+    ],
+    avg: "9.2%", best: "+30.9%", worst: "-20.9%",
+    note: "Invesco/Primerica equivalent: Moderate Growth Portfolio"
+  },
+  {
+    name: "Growth",
+    minScore: 60, maxScore: 73,
+    tag: "Moderately Aggressive",
+    tagColor: "#B04422", tagBg: "#FAECE7",
+    heroColor: "#B04422",
+    desc: "You are focused on long-term capital appreciation and willing to tolerate larger price swings. You do not need current income from this money and have a long enough horizon to ride out downturns.",
+    alloc: [
+      { pct: "64%", label: "US Stocks", color: "#1A6FAF" },
+      { pct: "21%", label: "Intl Stocks", color: "#5C55B0" },
+      { pct: "15%", label: "Bonds & Cash", color: "#9A6010" },
+    ],
+    avg: "9.8%", best: "+34.4%", worst: "-29.5%",
+    note: "Invesco/Primerica equivalent: Growth Portfolio"
+  },
+  {
+    name: "Aggressive Growth",
+    minScore: 74, maxScore: 999,
+    tag: "Aggressive",
+    tagColor: "#5C1A8A", tagBg: "#F3EAFC",
+    heroColor: "#5C1A8A",
+    desc: "Your goal is maximum long-term capital appreciation. You do not need current income, you have a long time horizon, and you are comfortable with substantial year-to-year volatility in exchange for potentially higher returns.",
+    alloc: [
+      { pct: "75%", label: "US Stocks", color: "#1A6FAF" },
+      { pct: "25%", label: "Intl Stocks", color: "#5C55B0" },
+      { pct: "0%",  label: "Bonds & Cash", color: "#9A6010" },
+    ],
+    avg: "10.2%", best: "+39.9%", worst: "-36.0%",
+    note: "Invesco/Primerica equivalent: Aggressive Growth Portfolio"
+  },
+];
+
+// ── IPQ STATE ───────────────────────────────────────────────────────────────
+let ipqAnswers = {};
+let ipqStep = 0;
+
+function ipqGetProfile(score) {
+  return IPQ_PROFILES.find(function(p) { return score >= p.minScore && score <= p.maxScore; }) || IPQ_PROFILES[2];
+}
+
+function ipqTotalScore() {
+  return Object.values(ipqAnswers).reduce(function(s, v) { return s + v; }, 0);
+}
+
+function ipqRender() {
+  var el = document.getElementById("ipq-quiz");
+  if (!el) return;
+
+  if (ipqStep === 0) {
+    el.innerHTML = "<div class=\"card\" style=\"text-align:center;padding:2rem 1.5rem;\">"
+      + "<div style=\"font-size:2.5rem;margin-bottom:.75rem;\">📊</div>"
+      + "<h2 style=\"font-family:\'Playfair Display\',serif;font-size:1.4rem;color:var(--navy);margin-bottom:.6rem;\">Find your investor profile</h2>"
+      + "<p style=\"font-size:13.5px;color:var(--text2);line-height:1.65;max-width:440px;margin:0 auto 1.5rem;\">"
+      + "Answer 9 questions about your goals, timeline, and comfort with risk. Takes about 3 minutes. "
+      + "Your results show which of the 5 portfolio profiles best matches your situation.</p>"
+      + "<div style=\"display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;\">"
+      + IPQ_PROFILES.map(function(p) {
+          return "<span style=\"font-size:11px;font-weight:600;padding:4px 11px;border-radius:12px;background:" + p.tagBg + ";color:" + p.tagColor + ";\">" + p.name + "</span>";
+        }).join("")
+      + "</div>"
+      + "<button class=\"calc-btn\" style=\"max-width:280px;margin:0 auto;\" onclick=\"ipqStart()\">Start questionnaire →</button>"
+      + "</div>";
+    return;
+  }
+
+  if (ipqStep > IPQ_Qs.length) {
+    ipqRenderResults();
+    return;
+  }
+
+  var q = IPQ_Qs[ipqStep - 1];
+  var progress = ((ipqStep - 1) / IPQ_Qs.length) * 100;
+  var selected = ipqAnswers[q.id];
+
+  var optsHtml = q.opts.map(function(o) {
+    var isSel = selected === o.pts;
+    return "<label class=\"ipq-opt" + (isSel ? " selected" : "") + "\" onclick=\"ipqSelect('" + q.id + "'," + o.pts + ",this)\">"
+      + "<input type=\"radio\" name=\"ipq-" + q.id + "\" value=\"" + o.pts + "\" " + (isSel ? "checked" : "") + " style=\"pointer-events:none;\">"
+      + "<span class=\"ipq-opt-text\">" + o.text + "</span>"
+      + "</label>";
+  }).join("");
+
+  el.innerHTML = "<div class=\"card\">"
+    + "<div class=\"ipq-progress-bar\"><div class=\"ipq-progress-fill\" style=\"width:" + progress + "%\"></div></div>"
+    + "<div class=\"ipq-q-label\">Question " + ipqStep + " of " + IPQ_Qs.length + "</div>"
+    + "<div class=\"ipq-q-text\">" + q.text + "</div>"
+    + (q.sub ? "<div class=\"ipq-q-sub\">" + q.sub + "</div>" : "")
+    + "<div class=\"ipq-options\">" + optsHtml + "</div>"
+    + "<div class=\"ipq-nav\">"
+    + (ipqStep > 1 ? "<button class=\"ipq-btn back\" onclick=\"ipqBack()\">← Back</button>" : "")
+    + "<button class=\"ipq-btn next\" onclick=\"ipqNext()\" " + (selected === undefined ? "disabled" : "") + " id=\"ipq-next-btn\">"
+    + (ipqStep === IPQ_Qs.length ? "See my profile →" : "Next →")
+    + "</button></div></div>";
+}
+
+function ipqRenderResults() {
+  var score = ipqTotalScore();
+  var profile = ipqGetProfile(score);
+  var el = document.getElementById("ipq-quiz");
+
+  var allocHtml = profile.alloc.map(function(a) {
+    return "<div class=\"ipq-alloc-card\">"
+      + "<div class=\"ipq-alloc-pct\" style=\"color:" + a.color + "\">" + a.pct + "</div>"
+      + "<div class=\"ipq-alloc-label\">" + a.label + "</div>"
+      + "</div>";
+  }).join("");
+
+  var profilePills = IPQ_PROFILES.map(function(p) {
+    return "<span class=\"ipq-profile-pill" + (p.name === profile.name ? " active" : "") + "\" style=\"background:" + p.tagBg + ";color:" + p.tagColor + ";\">" + p.name + "</span>";
+  }).join("");
+
+  el.innerHTML = "<div class=\"ipq-result-hero\" style=\"background:" + profile.heroColor + "\">"
+    + "<div class=\"ipq-result-eye\">Your investor profile</div>"
+    + "<div class=\"ipq-result-profile\">" + profile.name + "</div>"
+    + "<span class=\"ipq-result-tag\" style=\"background:" + profile.tagBg + ";color:" + profile.tagColor + ";\">" + profile.tag + "</span>"
+    + "<div class=\"ipq-result-desc\">" + profile.desc + "</div>"
+    + "</div>"
+    + "<div class=\"card\">"
+    + "<div class=\"card-title\">Your score</div>"
+    + "<div class=\"ipq-score-row\">"
+    + "<span class=\"ipq-score-pill\">Total score: <strong>" + score + "</strong></span>"
+    + "<span class=\"ipq-score-pill\" style=\"background:" + profile.tagBg + ";color:" + profile.tagColor + ";\">" + profile.tag + "</span>"
+    + "</div>"
+    + "<div class=\"ipq-profiles-row\">" + profilePills + "</div>"
+    + "</div>"
+    + "<div class=\"card\">"
+    + "<div class=\"card-title\">Suggested asset allocation</div>"
+    + "<div class=\"ipq-alloc-grid\">" + allocHtml + "</div>"
+    + "<div class=\"ipq-returns-grid\">"
+    + "<div class=\"ipq-return-card\"><div class=\"ipq-return-label\">Avg annual return</div><div class=\"ipq-return-val\">" + profile.avg + "</div></div>"
+    + "<div class=\"ipq-return-card\"><div class=\"ipq-return-label\">Best year</div><div class=\"ipq-return-val pos\">" + profile.best + "</div></div>"
+    + "<div class=\"ipq-return-card\"><div class=\"ipq-return-label\">Worst year</div><div class=\"ipq-return-val neg\">" + profile.worst + "</div></div>"
+    + "</div>"
+    + "<div style=\"font-size:11.5px;color:var(--text3);padding:.6rem .75rem;background:var(--bg);border-radius:6px;\">📋 " + profile.note + " · Returns are hypothetical historical averages, not a guarantee of future results.</div>"
+    + "</div>"
+    + "<div class=\"card\" style=\"background:var(--hector-lt);border-color:#C49AEC;\">"
+    + "<div style=\"font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--hector);margin-bottom:.5rem;font-family:\'DM Mono\',monospace;\">Next step</div>"
+    + "<div style=\"font-size:13.5px;color:#3A1260;line-height:1.65;\">This profile is a starting point — not a final recommendation. Your PFSI Registered Representative can help you build a real investment plan based on your complete financial picture. Share these results in your next conversation!</div>"
+    + "</div>"
+    + "<div style=\"display:flex;gap:10px;margin-top:1rem;flex-wrap:wrap;\">"
+    + "<button class=\"ipq-retry-btn\" onclick=\"ipqRestart()\">↩ Retake questionnaire</button>"
+    + "<button class=\"ipq-retry-btn\" onclick=\"window.print()\" style=\"background:var(--navy);color:#fff;border-color:var(--navy);\">🖨 Print results</button>"
+    + "</div>";
+}
+
+function ipqSelect(qid, pts, el) {
+  ipqAnswers[qid] = pts;
+  document.querySelectorAll(".ipq-opt").forEach(function(o) { o.classList.remove("selected"); });
+  el.classList.add("selected");
+  var btn = document.getElementById("ipq-next-btn");
+  if (btn) btn.disabled = false;
+}
+
+function ipqNext() {
+  var q = IPQ_Qs[ipqStep - 1];
+  if (ipqAnswers[q.id] === undefined) return;
+  ipqStep++;
+  ipqRender();
+  var quiz = document.getElementById("ipq-quiz");
+  if (quiz) quiz.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function ipqBack() {
+  if (ipqStep > 1) { ipqStep--; ipqRender(); }
+}
+
+function ipqStart() { ipqStep = 1; ipqRender(); }
+
+function ipqRestart() {
+  ipqAnswers = {};
+  ipqStep = 0;
+  ipqRender();
+}
+
+document.addEventListener("DOMContentLoaded", function() { ipqRender(); });
+</script>
+
+</body>
+</html>
