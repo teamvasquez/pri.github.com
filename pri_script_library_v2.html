@@ -131,10 +131,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <nav class="site-nav" aria-label="Site navigation">
   <a class="site-nav-brand" href="index.html">PRI System</a>
   <div class="site-nav-links">
-    <a class="snl" href="index.html" id="snl-home">🏠 Home</a>
-    <a class="snl active" href="pri_script_library_v2.html" id="snl-scripts">📝 Script Library</a>
-    <a class="snl" href="pri_workflows_and_scripts.html" id="snl-workflows">📋 Workflows</a>
-    <a class="snl" href="pri_financial_calculators.html" id="snl-calculators">🧮 Calculators</a>
+    <a class="snl" href="index.html">🏠 Home</a>
+    <a class="snl active" href="pri_script_library_v2.html">📝 Script Library</a>
+    <a class="snl" href="pri_workflows_and_scripts.html">📋 Workflows</a>
+    <a class="snl" href="pri_financial_calculators.html">🧮 Calculators</a>
   </div>
 </nav>
 
@@ -143,19 +143,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <h1 class="hdr-title">PRI Script Library</h1>
   <p class="hdr-sub">Complete scripts · 3 tones · side-by-side comparison for every stage</p>
   <div class="hdr-badges">
-    <span class="hdr-badge">Lead-in (7 variations)</span>
-    <span class="hdr-badge">20-min meeting</span>
-    <span class="hdr-badge">Close scripts</span>
-    <span class="hdr-badge">Follow-up texts & emails</span>
-    <span class="hdr-badge">15 objections · 3 tones</span>
-    <a class="calc-link" href="pri_financial_calculators.html" target="_blank">
+    <button class="hdr-badge-btn" onclick="go(0)" title="Lead-in scripts">Lead-in (12)</button>
+    <button class="hdr-badge-btn" onclick="go(12)" title="Pre-qualify questions">★ Pre-qualify</button>
+    <button class="hdr-badge-btn" onclick="go(13)" title="20-min referral meeting">20-min meeting</button>
+    <button class="hdr-badge-btn" onclick="go(14)" title="Recruit meeting">Recruit meeting</button>
+    <button class="hdr-badge-btn" onclick="go(15)" title="FNA meeting">FNA meeting</button>
+    <button class="hdr-badge-btn" onclick="go(16)" title="Close scripts">Close scripts</button>
+    <button class="hdr-badge-btn" onclick="go(17)" title="Follow-up">Follow-up</button>
+    <button class="hdr-badge-btn" onclick="go(20)" title="All 17 objections">17 objections</button>
+    <button class="hdr-badge-btn" onclick="go(21)" title="NEPQ scripts">💬 NEPQ</button>
+    <button class="hdr-badge-btn" onclick="go(22)" title="Recruit presentation">🎯 Recruit</button>
+    <a class="calc-link" href="pri_financial_calculators.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/>
       </svg>
-      Interest Calculator
+      Calculators
     </a>
   </div>
-</header>
+  </header>
 
 <div class="phil">
   <div class="phil-name">Hector LaMarque</div>
@@ -173,18 +178,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <button class="sb-item" onclick="go(4)"><span class="sb-num">5</span>Exciting news</button>
   <button class="sb-item" onclick="go(5)"><span class="sb-num">6</span>Ask for help</button>
   <button class="sb-item" onclick="go(6)"><span class="sb-num">7</span>Opportunity</button>
+  <button class="sb-item" onclick="go(7)"><span class="sb-num">8</span>What Do You Do?</button>
+  <button class="sb-item" onclick="go(8)"><span class="sb-num">9</span>Cash sitting around?</button>
+  <button class="sb-item" onclick="go(9)"><span class="sb-num">10</span>Money work for you?</button>
+  <button class="sb-item" onclick="go(10)"><span class="sb-num">11</span>Pressure-test</button>
+  <button class="sb-item" onclick="go(11)"><span class="sb-num">12</span>Big picture game plan</button>
   <hr class="sb-hr">
-  <div class="sb-label">Meeting</div>
-  <button class="sb-item" onclick="go(7)"><span class="sb-num">8</span>20-min structure</button>
-  <button class="sb-item" onclick="go(8)"><span class="sb-num">9</span>Close scripts</button>
+  <div class="sb-label">Pre-qualify</div>
+  <button class="sb-item" onclick="go(12)"><span class="sb-num">★</span>Goals &amp; Desires</button>
+  <hr class="sb-hr">
+  <div class="sb-label">Meetings</div>
+  <button class="sb-item" onclick="go(13)"><span class="sb-num">13</span>20-Min Referral/Intro</button>
+  <button class="sb-item" onclick="go(14)"><span class="sb-num">14</span>Recruit Meeting</button>
+  <button class="sb-item" onclick="go(15)"><span class="sb-num">15</span>FNA Meeting</button>
+  <hr class="sb-hr">
+  <div class="sb-label">Close scripts</div>
+  <button class="sb-item" onclick="go(16)"><span class="sb-num">16</span>Close scripts</button>
   <hr class="sb-hr">
   <div class="sb-label">Follow-up</div>
-  <button class="sb-item" onclick="go(9)"><span class="sb-num">10</span>Follow-up text</button>
-  <button class="sb-item" onclick="go(10)"><span class="sb-num">11</span>Email #1 (same day)</button>
-  <button class="sb-item" onclick="go(11)"><span class="sb-num">12</span>Email #2 (next day)</button>
+  <button class="sb-item" onclick="go(17)"><span class="sb-num">17</span>Follow-up text</button>
+  <button class="sb-item" onclick="go(18)"><span class="sb-num">18</span>Email #1 (same day)</button>
+  <button class="sb-item" onclick="go(19)"><span class="sb-num">19</span>Email #2 (next day)</button>
   <hr class="sb-hr">
-  <div class="sb-label">Objections (15)</div>
-  <button class="sb-item" onclick="go(12)"><span class="sb-num">!</span>All objections</button>
+  <div class="sb-label">Objections (17)</div>
+  <button class="sb-item" onclick="go(20)"><span class="sb-num">!</span>All 17 objections</button>
+  <hr class="sb-hr">
+  <div class="sb-label">Follow-Up &amp; Recruiting</div>
+  <button class="sb-item" onclick="go(21)"><span class="sb-num">💬</span>NEPQ Follow-Up</button>
+  <button class="sb-item" onclick="go(22)"><span class="sb-num">🎯</span>Recruit Presentation</button>
 </nav>
 
 <main class="main" id="main"></main>
@@ -409,8 +430,203 @@ Questions:
 "Based on what you've shared, I'd love to show you something. If there were a way to significantly increase your income while helping families in a meaningful way, would you be open to a 20-minute conversation to explore it?"`
 }},
 
+
+// 7 What Do You Do
+{wf:"Lead-in scripts",title:"What Do You Do?",sub:"Have these ready for any situation — elevator, networking, first meeting. Pick the one that fits the moment.",
+tip:"<strong>Hector's rule:</strong> Know your elevator pitch cold. Practice it until it sounds like you — not a rehearsed line. The goal is curiosity, not a full explanation.",
+tones:{
+  casual:{label:"Casual — conversational",
+   text:`• "I teach people what the banks and insurance companies don't want you to know — and help them save money on taxes and insurance. Do you know your FNA?"
+
+• "I'm a Financial Coach."
+
+• "I help people create a financial plan to protect them from unexpected challenges and ultimately achieve financial independence — which we all want, right?"
+
+• "I help people plan for unexpected challenges and achieve financial freedom."
+
+• "I'm in the business of helping people understand and win in the money game."
+
+• "Helping you understand what your financial number is and how to use that to make well-informed financial decisions."
+
+• "My goal is simple: Give people financial advice they can trust and insight they can act on."
+
+• "I specialize in empowering families to get on the path to financial independence — debt, income protection, and retirement."`,
+   note:"Pick 1-2 that feel natural to you and practice them daily. The best pitch is the one you can say without thinking."},
+  bold:{label:"Full coach version",
+   text:`"I'm a financial coach and I help educate and guide people on how to be financially free and have more choices. We structure a financial plan so they can get out of debt, create a spending plan, protect themselves from unexpected challenges, and ultimately achieve financial independence.
+
+Are you open to learning more?
+
+Great! When's a good time to meet — daytime or evenings?"`,
+   note:"This version is for when someone asks and you have 60 seconds. It ends with a direct ask for the meeting — don't leave without it."},
+  professional:{label:"One-liner — pick your favorite",
+   text:`Short and memorable — use these when you only have 10 seconds:
+
+• "I help families stop leaving money on the table."
+• "I build retirement strategies so you can stop wondering if you'll outlive your income."
+• "I help people achieve financial independence — debt, protection, and retirement."
+• "I teach people what the banks don't want you to know."`,
+   note:"One-liners work best at networking events or casual introductions. They create curiosity — the goal is a follow-up question, not a full explanation."}
+},
+yours:"",mine:"",merged:"",mnote:""},
+
+// 8 Conversation Starter — Cash
+{wf:"Lead-in scripts",title:"Do you have any cash sitting around?",sub:"A curiosity-opener for anyone who might have idle savings. Creates immediate intrigue.",
+tip:"<strong>Miner NEPQ principle:</strong> A question that makes them think about their situation is more powerful than any pitch. Let their answer open the door.",
+tones:{
+  casual:{label:"Casual text or conversation",
+   text:`"Do you have any cash sitting around?"
+
+[When they respond:]
+"Most people do and don't even realize it's losing value every year to inflation. I help people put that money to work — would you be open to a quick 20-minute call to see what's possible?"`,
+   note:"Great opener for someone you know has some savings or just got a bonus. Non-threatening — it's about their money, not your product."},
+  bold:{label:"Bold — direct hook",
+   text:`"Quick question — do you have any cash sitting around doing nothing?
+
+Because most people are unknowingly losing money every month by keeping it in the wrong place. I can show you what I mean in 20 minutes. Would this week or next weekend work?"`,
+   note:"More direct — works well when you want to move quickly to the ASK."},
+  professional:{label:"Professional context",
+   text:`"I work with a lot of people who have savings sitting in low-yield accounts without realizing the opportunity cost. Do you have any cash that's not currently working for you?
+
+I'd love to show you what a difference the right strategy can make — would a brief 20-minute conversation this week make sense?"`,
+   note:"Good for business networking or someone with a more formal background."}
+},
+yours:"",mine:"",merged:"",mnote:""},
+
+// 9 Conversation Starter — Money Working For You
+{wf:"Lead-in scripts",title:"Have you considered having your money work for you?",sub:"Opens a conversation about passive growth without pitching a product.",
+tip:"<strong>Key insight:</strong> This question implies they are working too hard for their money. It creates self-reflection — and self-reflection leads to appointments.",
+tones:{
+  casual:{label:"Casual",
+   text:`"Hey ___! Quick question — have you ever really sat down and thought about having your money work for you instead of the other way around?
+
+Most people spend 40+ years working for money but never flip the script. I help people do exactly that. Would you be open to a quick 20-minute call to see what that could look like for you?"`,
+   note:"Natural and conversational. Works great as a text follow-up or in a casual conversation."},
+  bold:{label:"Bold",
+   text:`"Have you considered having your money work for you?
+
+Because right now, most people's money is either sitting still or working against them — and they don't even know it. I can show you the difference in 20 minutes. This week or next weekend?"`,
+   note:"Punchy and direct. The phrase 'working against them' creates urgency without being pushy."},
+  professional:{label:"Professional",
+   text:`"Have you given much thought to positioning your money to generate returns on your behalf — rather than relying solely on earned income?
+
+It's something I help families structure all the time, and the difference it makes over 10-20 years is remarkable. Would you be open to a brief conversation?"`,
+   note:"Great for business professionals or anyone who thinks in ROI terms."}
+},
+yours:"",mine:"",merged:"",mnote:""},
+
+// 10 Conversation Starter — Pressure Test
+{wf:"Lead-in scripts",title:"When's the last time you pressure-tested your financial strategy?",sub:"Challenges assumptions without attacking. Works especially well for people who think they already have a plan.",
+tip:"<strong>NEPQ principle:</strong> 'Pressure-tested' implies their current plan might not hold up — without saying it directly. It creates doubt that invites a conversation.",
+tones:{
+  casual:{label:"Casual",
+   text:`"Hey ___! Random question — when's the last time you pressure-tested your financial strategy?
+
+Most people set something up years ago and never revisit it — but life changes, markets change, and what worked before might not be the best fit now. I help people do a quick review. Would you be open to a 20-minute call?"`,
+   note:"Great for warm market contacts who already have some financial setup but haven't reviewed it recently."},
+  bold:{label:"Bold",
+   text:`"Quick question — when's the last time you actually stress-tested your financial plan?
+
+Because most people haven't — and they're carrying way more risk than they realize. I can show you what I mean in 20 minutes. This week or next weekend?"`,
+   note:"More direct version. 'Stress-tested' and 'more risk than they realize' create urgency."},
+  professional:{label:"Professional",
+   text:`"When is the last time you had a comprehensive review of your financial strategy — not just checking balances, but really evaluating whether your current approach still aligns with your goals and timeline?
+
+I help people do exactly that, and most walk away with at least one meaningful insight. Would a brief conversation be worth your time?"`,
+   note:"Excellent for business professionals or anyone who has an advisor but hasn't had a real review."}
+},
+yours:"",mine:"",merged:"",mnote:""},
+
+// 11 Conversation Starter — Game Plan
+{wf:"Lead-in scripts",title:"Are you open to reviewing your big picture and creating a game plan?",sub:"Softest of the openers — non-threatening, collaborative, educational feel.",
+tip:"<strong>Why it works:</strong> 'Game plan' sounds like coaching, not selling. It positions you as a partner, not a salesperson — which is exactly how Hector teaches you to show up.",
+tones:{
+  casual:{label:"Casual",
+   text:`"Hey ___! I wanted to reach out because I've been helping people review their big financial picture and create a real game plan — and I thought of you.
+
+It's completely free and there's no obligation — most people just walk away with a much clearer sense of where they stand and what to do next. Would you be open to a quick 20-minute call?"`,
+   note:"Warm and collaborative. Great for anyone in your warm market who might feel intimidated by financial conversations."},
+  bold:{label:"Bold",
+   text:`"Are you open to reviewing your big picture and building a real financial game plan?
+
+Because most people are operating without one — and it's costing them more than they realize. 20 minutes. This week or next weekend?"`,
+   note:"More direct. The phrase 'costing them more than they realize' adds urgency."},
+  professional:{label:"Professional",
+   text:`"I work with a lot of professionals who are doing well financially but have never sat down to look at the complete picture and build a coordinated strategy.
+
+Would you be open to a no-obligation conversation to review where things stand and identify any gaps or opportunities? It typically takes about 20 minutes."`,
+   note:"Perfect for professionals who are busy but know they should be doing more."}
+},
+yours:"",mine:"",merged:"",mnote:""},
 // 7 20-min meeting
-{wf:"20-Minute Meeting",title:"20-Minute Meeting Structure",sub:"Call, Zoom, or in-person. Six steps. Goal: understand their situation, show value, earn the next step.",
+// PRE-QUALIFY
+{wf:"Pre-Qualify",title:"PRE-Qualify — Goals & Desires",sub:"Ask these thought-provoking, self-discovery questions before any pitch. The answers shape everything that follows.",
+tip:"<strong>Hector's rule:</strong> Be interested, not interesting. The rep who knows the most about their prospect walks into every conversation with an unfair advantage. Ask, listen, and add notes in CRM.",
+tones:{
+  casual:{label:"Full question list",
+   text:`PRE-QUALIFY: What Are Their Goals & Desires?
+
+Ask these thought-provoking, self-discovery questions to get you started:
+
+• What do you want?
+• What's going to make you happy?
+• What's important to you?
+• What inspires or motivates you?
+• What gets you excited?
+• What makes you want to jump out of bed and go?
+• What will make a difference in your life? Your family?
+• What activities fuel your fire?
+• What are the things you would do even if you didn't get paid for it?
+• What is the one thing you want to experience or accomplish before you die?
+• If you had all the money in the world, how would you spend your time?
+• What would your perfect day look like? (Describe every detail)`,
+   note:"Don't ask all of these at once — pick 2-3 that feel natural for the conversation. Add their exact answers to CRM notes immediately. Their words become your close."},
+  bold:{label:"MACHO + Job questions",
+   text:`MACHO (Pre-qualify for Life Insurance meetings):
+• Married/partner?
+• Age 25-55?
+• Children?
+• Homeowner?
+• Occupation/employed?
+Need 3 of 5 before booking a life insurance meeting.
+
+JOB/LIFE QUESTIONS (Pre-qualify for Recruit meetings):
+• What do you do for a living? How long?
+• Do you love it? What do you like most?
+• Are you making the money you want — or the money you need?
+• When do you plan to retire? How much will you need?
+• What's your biggest challenge in your current role?
+• Do you have big goals and dreams? When do you want to achieve them?
+• Will your current job get you there in the time you want?
+• If you could design your ideal work-life balance, what would that look like?
+
+CLOSE after job questions:
+"If there's a way for you to make a lot more money, serving people in a meaningful way, would you be open to making an additional income?"`,
+   note:"Reflect their answers back before closing: 'So what I'm hearing is [their words]...' This is the single most powerful thing you can do before your close."},
+  professional:{label:"FNA discovery questions",
+   text:`FNA PRE-QUALIFY — Financial Discovery:
+
+Current situation:
+• What do you currently have for life insurance coverage?
+• Do you have a 401(k), IRA, or other retirement accounts?
+• Do you have any significant debt — credit cards, student loans, car payments?
+• Do you own your home? Do you have a mortgage?
+• What does your household income look like?
+
+Goals & timeline:
+• When do you plan to retire?
+• What income do you want in retirement?
+• Do you have children you want to put through college?
+• What is your biggest financial concern right now?
+• What would financial independence look like for you?
+
+Permission close:
+"Based on what you've shared, I think a Financial Needs Analysis would give you a really clear picture of where you stand and what your path forward looks like. It's free and takes about 30-45 minutes. Would that be worth your time?"`,
+   note:"These questions are for the FNA pre-meeting or during the 20-min meeting when someone shows real interest. The goal is to understand their complete financial picture before you ever present a solution."}
+},
+yours:"",mine:"",merged:"",mnote:""},
+
+{wf:"Meeting",title:"20-Min Referral / Intro Meeting",sub:"Call, Zoom, or in-person. Six steps. Goal: understand their situation, show value, earn the next step.",
 tip:"<strong>Your structure is excellent.</strong> Step 4 (compound interest / Rule of 72) is your strongest differentiator — practice drawing it out until it feels effortless.",
 yours:`Step 1: Small talk briefly, then "Before we jump in, are you still good for about 20 minutes?"
 
@@ -509,6 +725,169 @@ Step 7 — Email permission
 mnote:"Your content + structure + my step-by-step framing + email permission added at end.",
 tones:{casual:"[See merged script above — the 20-min meeting structure works best as one unified script rather than tonal variations. Practice it until it flows naturally in your own voice.]",bold:"[Same structure — the content doesn't change by tone. Your energy and confidence in the room are the 'tone.' Focus on knowing the compound interest numbers cold.]",professional:"[Same structure — adjust your vocabulary naturally based on your audience. With a business professional, lean into ROI language. With a young family, lean into protection and legacy.]"}},
 
+
+// NEW Recruit Meeting
+{wf:"Meeting",title:"Recruit Overview Meeting",sub:"Your full business opportunity presentation — know this cold, then make it yours. Body language, excitement, and tonality will WIN or lose this.",
+tip:"<strong>Before you start:</strong> You are not selling a job. You are sharing a life-changing opportunity with someone you believe in. Your conviction is your most powerful tool.",
+tones:{
+  casual:{label:"Full meeting flow",
+   text:`STEP 1 — Chit chat & warm up (2-3 min)
+Be human first. Ask about their life, their week, their family. Reference something you know about them.
+
+Transition: "Hey, before I dive in — I'd love to hear more about what you've got going on right now..."
+
+STEP 2 — MACHO questions (5-7 min)
+• What do you do now for a living? How long have you been doing it?
+• Do you love it? What do you like most?
+• Are you making the money you want — or the money you need?
+• When do you see yourself retiring? Have you thought about that number?
+• What's your biggest challenge in your current role?
+• Do you have big goals and dreams? What does your ideal life look like?
+• Will your current job get you there in the time you want?
+
+[Write down their exact words — you'll use them in your close]
+
+STEP 3 — Your story + upline anchor
+• Why you made a change
+• "I joined my brother-in-law — 38 years of experience, one of the top advisors in the company."
+• Where you are now and where you're headed
+• Be real — share what you were afraid of, what you almost didn't do
+
+STEP 4 — Who is Primerica
+• Almost 50 years in business
+• NYSE listed, FINRA/state regulated
+• Mission: "We help Main Street, not Wall Street"
+• "Buy term and invest the rest"
+
+STEP 5 — The Opportunity (draw out circles, $$, 4 quadrants)
+• Personal sales income: your commission on every sale
+• Override income: earn % of everything your team produces
+• Draw it: you → your reps → their reps → growing override income
+• Non-captive independent: you build YOUR business
+• "This is how 38 years of building a team creates real financial independence"
+
+STEP 6 — Ask & confirm their goals
+• "You mentioned earlier that [their exact words]. Can you see how this connects?"
+• "Do you like working with people?"
+
+STEP 7 — The list
+• "How many people do you know who [MACHO match — married, have kids, need more income]?"
+• "Who don't know their FNA?"
+• "Who doesn't have a 401k or investments?"
+• "Who could use more income?"
+
+STEP 8 — Non-captive independence & business ownership
+• You are an independent business owner
+• No inventory, no territory limits, no ceiling on income
+• You earn what you build
+
+STEP 9 — How many hours?
+• "How many hours a week would you be willing to invest to actually make [their goal] happen?"
+
+STEP 10 — CLOSE (see Close Scripts)
+
+STEP 11 — Schedule next meeting
+• "Let's schedule a time to [complete your application / do your FNA / meet with my brother-in-law]. Would [day] or [day] work?"
+
+STEP 12 — Follow-up (same day)
+• Text: "So great sharing this with you today! What questions came up after thinking about it?"
+• Email: Recap the opportunity, their goals, clear next steps, referral ask in P.S.
+• Next day: Confirm email received`,
+   note:"Know every step before you walk in. The more you know their situation (MACHO), the more personal and powerful your close will be."},
+  bold:{label:"The 3 closes",
+   text:`CLOSE 1 — Dream Bridge (Tie-Down Summary)
+"[Name], earlier you mentioned that [their dream/goal] is what you really want. Based on everything we covered today, can you see how Primerica acts as the vehicle to get you from where you are now to that [goal]?"
+
+"You're serious about making [goal] a reality, aren't you?"
+
+CLOSE 2 — Opportunity Weighing Scale (Handling Stalls)
+"I completely understand your hesitation. Most people I've partnered with felt the exact same way before they saw the big picture. Let's use a simple weighing scale."
+
+"On one side — your concerns: time, licensing, fear of sales. On the other side — the income, the independence, and getting you to [goal]."
+
+"When we look at both sides, which side do you think will serve your family's future better in the long run?"
+
+CLOSE 3 — The Choice Close (Next Step)
+"If you had a choice between starting this journey now, or waiting and revisiting later — which would be in the best interest of your family?"
+
+"Does it make sense to get the licensing process started this week or next?"
+
+"I have [time] or [time] to help you get your onboarding started. Which works better for you?"`,
+   note:"Use the Dream Bridge first — it's the warmest. If they stall, move to the Weighing Scale. If they're still hesitant, use the Choice Close to get a specific commitment."},
+  professional:{label:"Objection — Is this MLM?",
+   text:`"That's a fair question and I'm glad you asked directly.
+
+Primerica is a licensed financial services company — publicly traded on the NYSE, regulated by FINRA and state insurance departments. We sell real financial products: life insurance, investments, and retirement accounts.
+
+The model is similar to how a law firm or real estate brokerage works — you can build a team and earn from their production, but it's always built on selling real products to real clients. It's very different from buying inventory or selling products to friends.
+
+Would it help if I showed you exactly how the compensation works?"`,
+   note:"Answer this one directly and confidently. Hesitation confirms their suspicion. Own it and reframe it clearly every time."}
+},
+yours:"",mine:"",merged:"",mnote:""},
+
+// NEW FNA Meeting placeholder
+{wf:"Meeting",title:"FNA Meeting",sub:"Financial Needs Analysis meeting — full flow coming soon. Use this as your framework until the complete version is built.",
+tip:"<strong>Tracy's rule:</strong> Never attempt to close without first understanding the full picture. The FNA IS the rapport tool — it shows you care more about their situation than the sale.",
+tones:{
+  casual:{label:"Meeting framework",
+   text:`BEFORE THE MEETING:
+• Confirm (text + email same day scheduled, reminder morning of)
+• Review all CRM notes — know their MACHO cold before you walk in
+• Have compound interest calculator and Rule of 72 ready
+
+THE MEETING:
+Step 1: Small talk + confirm time
+"Still good for about 20-30 minutes?"
+
+Step 2: Deep MACHO + job questions
+More thorough than the 20-min meeting. Understand their full financial picture.
+
+Step 3: Review their current situation
+• What do they have now? What is missing?
+• What are they paying? What are their goals?
+
+Step 4: Present solution
+Based on what you learned — life insurance, investments, debt elimination, or a combination.
+
+Step 5: Handle objections
+Use your objection library. Stay calm. Re-ask after handling each one.
+
+Step 6: ASK for referrals + email permission
+"Who came to mind while we were talking?" Always.
+
+SAME-DAY FOLLOW-UP:
+• Thank you text (2-3 messages) — reference something specific they shared
+• Follow-up email — recap, next steps bulleted, referral ask
+• Next day: text to confirm email received
+
+[Full FNA meeting scripts coming soon]`,
+   note:"Add detailed notes to CRM immediately after every FNA. The quality of your notes determines the quality of every future conversation."},
+  bold:{label:"FNA close scripts",
+   text:`CLOSE 1 — The Game Plan Close
+"If you had a written financial game plan and you like it and use it — would you refer me to everyone you know?"
+
+CLOSE 2 — Pressure Test
+"When's the last time you pressure-tested your financial strategy?"
+
+CLOSE 3 — The Strategy Close (SFA)
+"I appreciate the opportunity to serve you and help you reach your financial goals. I imagine you want me to come with the absolute BEST strategy to help you do that — would that be a fair assumption?"
+
+[They say YES]
+
+"Well, in order for me to do that, I offer a full Financial Needs Analysis so I can best understand all areas of your financial life. It costs nothing more than about 30-45 minutes. Wouldn't it make sense for us to use that time to uncover your best options?"
+
+→ SCHEDULE THE FNA MEETING`,
+   note:"The Strategy Close (SFA) is extremely powerful — it gets them to agree that they want your best before you even present. Never skip the permission step."},
+  professional:{label:"Professional",
+   text:`[Full professional FNA scripts coming soon — framework above applies to all contexts]
+
+Key principle: The FNA is not a sales call. It is a discovery process. The more you understand about their complete financial picture, the more precisely you can help — and the more they trust you.
+
+Go into every FNA with one goal: understand first, present second.`,
+   note:"Content for this tab will be expanded as you finalize your FNA scripts."}
+},
+yours:"",mine:"",merged:"",mnote:""},
 // 8 Close
 {wf:"Close Scripts",title:"Close Scripts",sub:"After the meeting. Goal: get referrals first, then permission to follow up, then offer the FNA.",
 tip:"<strong>Your close is warm and non-pushy</strong> — exactly right. The referral ask comes first, before the FNA offer. Always ask for referrals before offering your own services.",
@@ -769,7 +1148,7 @@ Amy Vasquez`
 }},
 
 // 12 Objections
-{wf:"Objections (15)",title:"Objections — All 15",sub:"Your casual responses are the base. Use the tone buttons to see Professional and Bold/Direct versions.",
+{wf:"Objections (17)",title:"Objections — All 17",sub:"Your casual responses are the base. Use the tone buttons to see Professional and Bold/Direct versions.",
 tip:"<strong>Know these cold before you need them.</strong> Practice each one out loud until the response feels natural, not memorized. Your casual versions are excellent — warm, human, and pressure-free.",
 yours:"",mine:"",merged:"",mnote:"",
 objections:[
@@ -833,7 +1212,55 @@ objections:[
    casual:`Primerica! A financial services company that's been in business for almost 50 years and has helped millions of middle-income families in North America be properly protected and invest in their future.`,
    professional:`Primerica — a publicly traded financial services company with nearly 50 years in business. They've helped millions of middle-income families across North America with life insurance, investments, and retirement planning.`,
    bold:`Primerica — almost 50 years in business, millions of families helped, publicly traded on the NYSE. Solid company.`},
-],
+,
+  {q:"I have an advisor",
+   casual:`Do you know your FIN — your Financial Independence Number?
+
+[If they don't know:]
+You've had an advisor for years and you don't know your number? That's an injustice! You don't need another investment. You need a strategy.
+
+[Pull up FIN calculator]
+
+Can we get together for 20 minutes so I can show you what your real number looks like?`,
+   professional:`That's great — having an advisor shows you take your finances seriously. Quick question: do you know your Financial Independence Number — the actual dollar amount you need to retire at your desired income?
+
+[If they don't know:]
+That's actually very common, even among people who have worked with advisors for years. I'd love to spend 20 minutes walking you through it. Would that be worth your time?`,
+   bold:`Great! Do you know your FIN?
+
+[They don't know]
+
+You don't need another investment — you need a strategy. Let me show you yours in 20 minutes. This week or next weekend?`},
+  {q:"Primerica? No thanks!",
+   casual:`Do you have a favorite restaurant?
+
+[They answer]
+
+Have you ever had bad service there?
+
+[They say yes]
+
+Did that stop you from ever going back?
+
+[They say no]
+
+That's exactly how I think about this. Whatever you heard, one person's experience doesn't define what we do. Our goal is to educate and genuinely improve people's financial lives.
+
+All I'm asking for is 20 minutes to show you what we actually do. If it's not for you after that, no hard feelings. Would this week or next weekend work?`,
+   professional:`I understand — may I ask what you've heard?
+
+[Listen fully]
+
+One experience or perspective doesn't always reflect the full picture. Primerica has been serving middle-income families for almost 50 years with a genuine mission of financial education.
+
+All I'm asking for is 20 minutes. If it's not relevant to your situation, I'll be the first to tell you. Would that be fair?`,
+   bold:`Fair enough — what have you heard?
+
+[Listen]
+
+Every company has critics. What matters is whether the service actually helps people. Our goal is simple: educate and improve the financial lives of every family we work with.
+
+20 minutes. If you still feel the same way after, I'll buy the coffee. This week or next weekend?`},
 tones:{casual:"",bold:"",professional:""}
 }
 ];
@@ -846,6 +1273,7 @@ function go(i){
   cur=i;
   document.querySelectorAll('.sb-item').forEach((el,j)=>el.classList.toggle('active',j===i));
   render();
+  window.scrollTo({top:0,behavior:'smooth'});
   document.getElementById('prog').style.width=((i+1)/PANELS.length*100)+'%';
   window.scrollTo({top:0,behavior:'smooth'});
 }
